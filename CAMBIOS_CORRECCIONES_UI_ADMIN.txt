@@ -1,0 +1,37 @@
+PARFUM - CORRECCIONES DE INTERFAZ Y LIMPIEZA ADMINISTRATIVA
+
+FRONTEND
+- El sitio abre en modo claro por defecto para visitantes nuevos.
+- El modo elegido por el usuario sigue guardándose en localStorage.
+- Se corrigió el contraste del modo noche en marcas destacadas, tablas, formularios,
+  paneles, estados, fichas, presentaciones y otras zonas claras.
+- Se reforzó el menú hamburguesa para que siempre muestre logo, enlaces,
+  cuenta, modo noche e instalación de la app.
+- Se reemplazaron las imágenes de Armani Code Parfum y Valentino Uomo Born in
+  Roma Coral Fantasy por las imágenes proporcionadas.
+- Se incrementó la versión de la caché local del catálogo.
+- El panel administrativo permite eliminar actividad individual, actividad de
+  más de 30 días o toda la actividad.
+- La bandeja permite eliminar mensajes individuales, todos los respondidos o
+  vaciar todos los mensajes.
+
+BACKEND
+- Nuevos endpoints de administrador:
+  DELETE /api/admin/actividad/{id}
+  DELETE /api/admin/actividad?olderThanDays=30
+  DELETE /api/admin/actividad?all=true
+- Nuevos endpoints de limpieza de contactos:
+  DELETE /api/contactos?estado=RESPONDIDO
+  DELETE /api/contactos?all=true
+- Todos los endpoints anteriores requieren rol ADMIN.
+
+BASES DE DATOS
+- No se requiere ejecutar SQL en Neon.
+- No se requiere ejecutar ningún script en MongoDB Atlas.
+- Las eliminaciones se aplican directamente desde el panel administrativo.
+
+PUBLICACIÓN
+1. Reemplazar el backend y hacer push. Esperar el despliegue correcto de Render.
+2. Reemplazar el frontend y hacer push. Esperar el despliegue de Netlify.
+3. Cuando Parfum muestre "Nueva versión disponible", pulsar Actualizar.
+4. Si el navegador conserva archivos antiguos, usar Ctrl + F5 una vez.

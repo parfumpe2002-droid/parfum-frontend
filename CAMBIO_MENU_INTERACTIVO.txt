@@ -1,0 +1,13 @@
+CORRECCIÓN DEL MENÚ MÓVIL
+
+Problema:
+El panel lateral se mostraba, pero el fondo oscuro (backdrop) quedaba por encima del menú dentro del contexto de apilamiento del encabezado. Por eso los enlaces parecían visibles, pero los toques/clics eran interceptados.
+
+Corrección:
+- Se eleva el encabezado cuando body tiene la clase menu-open.
+- El cajón móvil queda por encima del backdrop.
+- Se habilitan explícitamente los eventos táctiles y de puntero en enlaces y botones del menú.
+- El backdrop conserva el cierre al tocar fuera del cajón.
+
+Archivo modificado:
+public_html/css/layout.css
