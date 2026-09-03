@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<meta name="theme-color" content="#0c0d0c"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Parfum"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png"/>
+<script src="js/theme-init.js"></script>
+<title>Carrito y pago | Parfum</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="css/app.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<script defer src="js/config.js"></script>
+<script defer src="js/fallback-products.js"></script>
+<script defer src="js/api.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/activity.js"></script>
+<script defer src="js/layout.js"></script>
+<script defer src="js/carrito.js"></script>
+<script defer src="js/pwa.js"></script>
+</head>
+<body data-page="carrito">
+<div id="appHeader"></div>
+<section class="page-hero">
+    <div class="page-shell">
+        <p class="eyebrow">Tu compra</p>
+        <h1>Carrito y pago</h1>
+        <p>Elige Yape o transferencia BCP. Puedes adjuntar el comprobante ahora o dejarlo opcional para coordinar el pago luego.</p>
+    </div>
+</section>
+<main class="page-shell content-section">
+    <div class="two-col checkout-layout">
+        <div class="cart-list" id="cartList"></div>
+        <aside class="panel summary-card checkout-card">
+            <h2>Resumen</h2>
+            <div class="summary-line"><span>Subtotal</span><strong id="subtotal">S/ 0.00</strong></div>
+            <div class="summary-line"><span>Envío</span><span>Se coordina</span></div>
+            <div class="summary-line summary-total"><span>Total</span><strong id="total">S/ 0.00</strong></div>
+
+            <section class="decant-gift-box" id="decantGiftBox" hidden>
+                <div class="decant-gift-heading"><i class="fa-solid fa-gift"></i><div><b>¡Tienes un decant gratis!</b><small>Por comprar 3 o más decants, elige un perfume árabe de 3 ml.</small></div></div>
+                <div class="field">
+                    <label for="giftArabicProduct">Perfume árabe de regalo</label>
+                    <select id="giftArabicProduct"><option value="">Cargando opciones…</option></select>
+                </div>
+                <div id="giftPreview" class="gift-preview"></div>
+            </section>
+
+            <form id="checkoutForm">
+                <div class="field">
+                    <label for="payment">Método de pago</label>
+                    <select id="payment" required>
+                        <option value="YAPE">Yape</option>
+                        <option value="TRANSFERENCIA_BCP">Transferencia BCP</option>
+                    </select>
+                </div>
+
+                <section class="payment-instructions" id="paymentInstructions" aria-live="polite"></section>
+
+                <section id="guestCheckoutFields" hidden>
+                <div class="field guest-checkout-fields">
+                    <label for="guestName">Nombre para el pedido</label>
+                    <input id="guestName" maxlength="100" placeholder="Tu nombre completo" autocomplete="name"/>
+                    <small>Si no inicias sesión, usaremos este nombre para coordinar tu compra.</small>
+                </div>
+
+                <div class="field guest-checkout-fields">
+                    <label for="guestEmail">Correo (opcional)</label>
+                    <input id="guestEmail" maxlength="160" placeholder="tucorreo@ejemplo.com" autocomplete="email"/>
+                </div>
+            </section>
+
+                <div class="field">
+                    <label for="contactPhone">Celular de contacto</label>
+                    <input id="contactPhone" maxlength="30" placeholder="Ej. 987654321" autocomplete="tel"/>
+                    <small>Nos servirá para coordinar el pago, envío o cualquier detalle del pedido.</small>
+                </div>
+
+                <div class="field">
+                    <label for="operationNumber">Número de operación (opcional)</label>
+                    <input id="operationNumber" maxlength="80" placeholder="Ej. 123456789" autocomplete="off"/>
+                    <small>Si ya pagaste, escribe el código que aparece en tu constancia.</small>
+                </div>
+
+                <div class="field">
+                    <label for="paymentProof">Comprobante de pago (opcional)</label>
+                    <label class="payment-proof-picker" for="paymentProof">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span><b id="proofFileName">Seleccionar captura (opcional)</b><small>JPG, PNG o WebP. Máximo 8 MB.</small></span>
+                    </label>
+                    <input id="paymentProof" type="file" accept="image/jpeg,image/png,image/webp" hidden/>
+                    <div class="payment-proof-preview" id="proofPreview" hidden>
+                        <img id="proofPreviewImage" alt="Vista previa del comprobante"/>
+                        <button type="button" id="removeProof" class="icon-button" aria-label="Quitar comprobante"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <small>En computadora puedes dejarlo para después y coordinar el pago por celular.</small>
+                </div>
+
+                <div class="field">
+                    <label for="deliveryAddress">Dirección de entrega</label>
+                    <textarea id="deliveryAddress" required rows="3" placeholder="Distrito, dirección y referencia"></textarea>
+                </div>
+
+                <div class="payment-notice">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>No manejamos pago contra entrega. Si aún no adjuntas el comprobante, el pedido quedará registrado para coordinar el pago contigo.</p>
+                </div>
+
+                <button class="primary-btn" id="checkoutButton" style="width:100%" type="submit">
+                    <i class="fa-solid fa-lock"></i> Registrar pedido
+                </button>
+                <p class="form-message" id="checkoutMessage"></p>
+            </form>
+        </aside>
+    </div>
+</main>
+<div id="appFooter"></div>
+</body>
+</html>

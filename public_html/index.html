@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="theme-color" content="#0c0d0c"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Parfum"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png"/>
+<script src="js/theme-init.js"></script>
+
+<meta content="Parfum Perú: decants de perfumes originales de diseñador, nicho, árabes y para mujer en 3, 5, 10, 20 y 30 ml. Consulta también por frascos completos." name="description"/>
+<title>Parfum | Decants de perfumes originales en Perú</title>
+<link rel="canonical" href="https://parfum.com.pe/"/>
+<meta property="og:title" content="Parfum | Decants de perfumes originales en Perú"/>
+<meta property="og:description" content="Decants de perfumes originales en 3, 5, 10, 20 y 30 ml. Diseñador, nicho, árabes y mujer."/>
+<meta property="og:url" content="https://parfum.com.pe/"/>
+<meta property="og:type" content="website"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="css/index.css" rel="stylesheet" type="text/css"/><link href="css/layout.css" rel="stylesheet"/>
+<script defer="" src="js/config.js"></script>
+<script defer="" src="js/fallback-products.js"></script>
+<script defer="" src="js/api.js"></script>
+<script defer="" src="js/store.js"></script>
+<script defer="" src="js/activity.js"></script><script defer="True" src="js/layout.js"></script>
+<script defer="" src="js/sponsor.js"></script>
+<script defer="" src="js/index.js"></script>
+<script defer src="js/pwa.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"OnlineStore","name":"Parfum","url":"https://parfum.com.pe/","description":"Decants de perfumes originales en Perú","telephone":"+51 963 257 194","areaServed":"PE"}</script>
+</head>
+<body data-page="inicio">
+<div id="appHeader"></div><main>
+<section aria-label="Promociones destacadas" class="hero" data-sponsor-carousel="">
+<div class="hero-slider" id="heroSlider">
+<div class="hero-track" id="heroTrack">
+<!-- Clon del tercer banner para que el movimiento hacia atrás también sea infinito. -->
+<article aria-hidden="true" class="hero-slide hero-clone">
+<img alt="" class="hero-media" src="imagen/sponsor3.png"/>
+<div class="hero-overlay"></div>
+<div class="hero-content shell">
+<p class="eyebrow">Perfumería de autor</p>
+<h2>Lujo en cada<br/><span>nota</span></h2>
+<p class="hero-description">Explora aromas amaderados, frescos, dulces y orientales para encontrar una firma verdaderamente personal.</p>
+<a class="primary-button" href="#categorias" tabindex="-1">Explorar categorías</a>
+</div>
+</article>
+<article class="hero-slide" data-real-slide="0">
+<img alt="Colección premium de perfumes negros y dorados sobre bases de piedra" class="hero-media" fetchpriority="high" src="imagen/sponsor1.jpg"/>
+<div class="hero-overlay"></div>
+<div class="hero-content shell">
+<p class="eyebrow">Decants de perfumes originales</p>
+<h1>Prueba tu aroma,<br/><span>antes del frasco</span></h1>
+<p class="hero-description">Descubre decants de diseñador, nicho, árabes y fragancias para mujer en 3, 5, 10, 20 y 30 ml. Si quieres el frasco completo, consúltalo por WhatsApp.</p>
+<div class="hero-proof">
+<span><i class="fa-solid fa-award"></i><b>100% originales</b><small>Garantía de autenticidad</small></span>
+<span><i class="fa-solid fa-box"></i><b>Envíos seguros</b><small>A todo el Perú</small></span>
+<span><i class="fa-solid fa-shield-halved"></i><b>Compra segura</b><small>Pago protegido</small></span>
+</div>
+<a class="primary-button" href="#catalogo">Descubrir colección</a>
+</div>
+</article>
+<article class="hero-slide" data-real-slide="1">
+<img alt="Colección de perfumes de lujo entre humo y destellos dorados" class="hero-media" src="imagen/sponsor2.png"/>
+<div class="hero-overlay"></div>
+<div class="hero-content shell">
+<p class="eyebrow">Selección exclusiva</p>
+<h2>Fragancias que<br/><span>dejan huella</span></h2>
+<p class="hero-description">Aromas intensos, elegantes y memorables seleccionados para acompañarte en tus mejores momentos.</p>
+<a class="primary-button" href="#catalogo">Ver más vendidos</a>
+</div>
+</article>
+<article class="hero-slide" data-real-slide="2">
+<img alt="Selección de perfumes negros y dorados con iluminación cálida" class="hero-media" src="imagen/sponsor3.png"/>
+<div class="hero-overlay"></div>
+<div class="hero-content shell">
+<p class="eyebrow">Perfumería de autor</p>
+<h2>Lujo en cada<br/><span>nota</span></h2>
+<p class="hero-description">Explora aromas amaderados, frescos, dulces y orientales para encontrar una firma verdaderamente personal.</p>
+<a class="primary-button" href="#categorias">Explorar categorías</a>
+</div>
+</article>
+<!-- Clon del primer banner para reiniciar sin salto visible. -->
+<article aria-hidden="true" class="hero-slide hero-clone">
+<img alt="" class="hero-media" src="imagen/sponsor1.jpg"/>
+<div class="hero-overlay"></div>
+<div class="hero-content shell">
+<p class="eyebrow">Perfumes originales</p>
+<h2>Tu esencia,<br/><span>tu firma</span></h2>
+<p class="hero-description">Descubre nuestra selección de perfumes de diseñador, nicho y árabes para hombre, elegidos para cada ocasión.</p>
+<a class="primary-button" href="#catalogo" tabindex="-1">Descubrir colección</a>
+</div>
+</article>
+</div>
+</div>
+<div aria-label="Controles del carrusel" class="hero-controls">
+<button aria-label="Banner anterior" id="heroPrev" type="button"><i class="fa-solid fa-chevron-left"></i></button>
+<div aria-label="Elegir banner" class="hero-dots" id="heroDots"></div>
+<button aria-label="Banner siguiente" id="heroNext" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+</div>
+</section>
+<section class="category-section shell" id="categorias">
+<article class="category-card">
+<div>
+<p class="category-kicker">Colección</p>
+<h2>Perfumes de diseñador</h2>
+<p>Las casas más reconocidas y sus fragancias masculinas más buscadas.</p>
+<a href="productos.html?categoria=Dise%C3%B1ador">Ver colección <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<img alt="Perfume de diseñador para hombre" loading="lazy" src="imagen/perfumes/invictus-victory-elixir.png"/>
+</article>
+<article class="category-card featured">
+<div>
+<p class="category-kicker">Exclusividad</p>
+<h2>Perfumes nicho</h2>
+<p>Fragancias distintivas, sofisticadas y menos convencionales.</p>
+<a href="productos.html?categoria=Nicho">Ver colección <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<img alt="Perfume nicho para hombre" loading="lazy" src="imagen/perfumes/erba-pura.png"/>
+</article>
+<article class="category-card">
+<div>
+<p class="category-kicker">Tradición y carácter</p>
+<h2>Perfumes árabes</h2>
+<p>Fragancias modernas y sofisticadas con perfiles dulces, especiados, amaderados.</p>
+<a href="productos.html?categoria=%C3%81rabe">Ver colección <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+<img alt="Perfume árabe negro y dorado" loading="lazy" src="imagen/perfumes/asad.png"/>
+</article>
+</section>
+<section aria-label="Beneficios de comprar en Parfum" class="benefits shell">
+<div><i class="fa-solid fa-certificate"></i><span><b>Gran variedad</b><small>Perfumes de diseñador, nicho y árabes</small></span></div>
+<div><i class="fa-solid fa-vial"></i><span><b>Decants de calidad</b><small>Atomizadores seguros y premium</small></span></div>
+<div><i class="fa-solid fa-headset"></i><span><b>Atención personalizada</b><small>Te ayudamos a elegir tu aroma</small></span></div>
+<div><i class="fa-regular fa-comments"></i><span><b>Comunidad Parfum</b><small>Reseñas, consejos y lanzamientos</small></span></div>
+</section>
+<section class="products-section shell" id="catalogo">
+<div class="section-heading">
+<div>
+<p class="section-kicker">Selección Parfum</p>
+<h2>Más vendidos</h2>
+</div>
+<div class="catalog-tools">
+<p aria-live="polite" class="catalog-status" id="catalogStatus" role="status">
+<span aria-hidden="true" class="status-spinner"></span>
+<span>Actualizando catálogo…</span>
+</p>
+<a href="productos.html">Ver todos <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+</div>
+<!--
+                Estos 15 productos están escritos directamente en el HTML.
+                Aparecen al instante mientras Render inicia. Cuando la API responde,
+                js/index.js reemplaza estas tarjetas por los productos de la base de datos.
+            -->
+<div class="product-grid" id="productGrid"><article class="product-card" data-fallback="true" data-key="PAR-H-001" data-search="erba pura xerjoff nicho eau de parfum"><button aria-label="Agregar Erba Pura a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=erba-pura"><div class="product-image"><img alt="Erba Pura" data-fallback="imagen/perfumes/erba-pura.png" loading="eager" src="imagen/perfumes/erba-pura.png"/></div><div class="product-info"><h3>Erba Pura</h3><p>Xerjoff</p><span class="product-tag">Nicho</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-002" data-search="torino 21 xerjoff nicho eau de parfum"><button aria-label="Agregar Torino 21 a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=torino-21"><div class="product-image"><img alt="Torino 21" data-fallback="imagen/perfumes/torino-21.png" loading="eager" src="imagen/perfumes/torino-21.png"/></div><div class="product-info"><h3>Torino 21</h3><p>Xerjoff</p><span class="product-tag">Nicho</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-003" data-search="invictus victory elixir paco rabanne diseñador elixir"><button aria-label="Agregar Invictus Victory Elixir a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=invictus-victory-elixir"><div class="product-image"><img alt="Invictus Victory Elixir" data-fallback="imagen/perfumes/invictus-victory-elixir.png" loading="eager" src="imagen/perfumes/invictus-victory-elixir.png"/></div><div class="product-info"><h3>Invictus Victory Elixir</h3><p>Paco Rabanne</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-004" data-search="stronger with you intensely giorgio armani diseñador eau de parfum"><button aria-label="Agregar Stronger With You Intensely a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=stronger-with-you-intensely"><div class="product-image"><img alt="Stronger With You Intensely" data-fallback="imagen/perfumes/stronger-with-you-intensely.png" loading="eager" src="imagen/perfumes/stronger-with-you-intensely.png"/></div><div class="product-info"><h3>Stronger With You Intensely</h3><p>Giorgio Armani</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-020" data-search="valentino uomo born in roma coral fantasy valentino diseñador eau de toilette"><button aria-label="Agregar Valentino Uomo Born in Roma Coral Fantasy a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=valentino-uomo-born-in-roma-coral-fantasy"><div class="product-image"><img alt="Valentino Uomo Born in Roma Coral Fantasy" data-fallback="imagen/perfumes/valentino-born-in-roma-coral-fantasy.png" loading="eager" src="imagen/perfumes/valentino-born-in-roma-coral-fantasy.png"/></div><div class="product-info"><h3>Valentino Uomo Born in Roma Coral Fantasy</h3><p>Valentino</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-006" data-search="dior homme intense christian dior diseñador eau de parfum intense"><button aria-label="Agregar Dior Homme Intense a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=dior-homme-intense"><div class="product-image"><img alt="Dior Homme Intense" data-fallback="imagen/perfumes/dior-homme-intense.png" loading="eager" src="imagen/perfumes/dior-homme-intense.png"/></div><div class="product-info"><h3>Dior Homme Intense</h3><p>Christian Dior</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-007" data-search="armani code parfum giorgio armani diseñador parfum"><button aria-label="Agregar Armani Code Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=armani-code-parfum"><div class="product-image"><img alt="Armani Code Parfum" data-fallback="imagen/perfumes/armani-code-parfum.png" loading="eager" src="imagen/perfumes/armani-code-parfum.png"/></div><div class="product-info"><h3>Armani Code Parfum</h3><p>Giorgio Armani</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-008" data-search="one million elixir paco rabanne diseñador elixir"><button aria-label="Agregar One Million Elixir a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=one-million-elixir"><div class="product-image"><img alt="One Million Elixir" data-fallback="imagen/perfumes/one-million-elixir.png" loading="eager" src="imagen/perfumes/one-million-elixir.png"/></div><div class="product-info"><h3>One Million Elixir</h3><p>Paco Rabanne</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-009" data-search="acqua di giò parfum giorgio armani diseñador parfum"><button aria-label="Agregar Acqua di Giò Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=acqua-di-gio-parfum"><div class="product-image"><img alt="Acqua di Giò Parfum" data-fallback="imagen/perfumes/acqua-di-gio-parfum.png" loading="eager" src="imagen/perfumes/acqua-di-gio-parfum.png"/></div><div class="product-info"><h3>Acqua di Giò Parfum</h3><p>Giorgio Armani</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-010" data-search="y eau de parfum yves saint laurent (ysl) diseñador eau de parfum"><button aria-label="Agregar Y Eau de Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=y-eau-de-parfum"><div class="product-image"><img alt="Y Eau de Parfum" data-fallback="imagen/perfumes/y-eau-de-parfum.png" loading="eager" src="imagen/perfumes/y-eau-de-parfum.png"/></div><div class="product-info"><h3>Y Eau de Parfum</h3><p>Yves Saint Laurent (YSL)</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-011" data-search="the most wanted parfum azzaro diseñador parfum"><button aria-label="Agregar The Most Wanted Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=the-most-wanted-parfum"><div class="product-image"><img alt="The Most Wanted Parfum" data-fallback="imagen/perfumes/the-most-wanted-parfum.png" loading="eager" src="imagen/perfumes/the-most-wanted-parfum.png"/></div><div class="product-info"><h3>The Most Wanted Parfum</h3><p>Azzaro</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-012" data-search="sauvage eau de parfum christian dior diseñador eau de parfum"><button aria-label="Agregar Sauvage Eau de Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=sauvage-eau-de-parfum"><div class="product-image"><img alt="Sauvage Eau de Parfum" data-fallback="imagen/perfumes/sauvage-eau-de-parfum.png" loading="eager" src="imagen/perfumes/sauvage-eau-de-parfum.png"/></div><div class="product-info"><h3>Sauvage Eau de Parfum</h3><p>Christian Dior</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-032" data-search="le male elixir absolu jean paul gaultier diseñador parfum intense"><button aria-label="Agregar Le Male Elixir Absolu a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=le-male-elixir-absolu"><div class="product-image"><img alt="Le Male Elixir Absolu" data-fallback="imagen/perfumes/le-male-elixir-absolu.png" loading="eager" src="imagen/perfumes/le-male-elixir-absolu.png"/></div><div class="product-info"><h3>Le Male Elixir Absolu</h3><p>Jean Paul Gaultier</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-014" data-search="le beau le parfum jean paul gaultier diseñador le parfum"><button aria-label="Agregar Le Beau Le Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=le-beau-le-parfum"><div class="product-image"><img alt="Le Beau Le Parfum" data-fallback="imagen/perfumes/le-beau-le-parfum.png" loading="eager" src="imagen/perfumes/le-beau-le-parfum.png"/></div><div class="product-info"><h3>Le Beau Le Parfum</h3><p>Jean Paul Gaultier</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article><article class="product-card" data-fallback="true" data-key="PAR-H-015" data-search="eros flame eau de parfum versace diseñador eau de parfum"><button aria-label="Agregar Eros Flame Eau de Parfum a favoritos" class="favorite-button" data-action="favorite" type="button"><i class="fa-regular fa-heart"></i></button><a class="product-link" href="detalle.html?slug=eros-flame-eau-de-parfum"><div class="product-image"><img alt="Eros Flame Eau de Parfum" data-fallback="imagen/perfumes/eros-flame-eau-de-parfum.png" loading="eager" src="imagen/perfumes/eros-flame-eau-de-parfum.png"/></div><div class="product-info"><h3>Eros Flame Eau de Parfum</h3><p>Versace</p><span class="product-tag">Diseñador</span><strong>Precio por confirmar</strong></div></a><button class="add-button" data-action="cart" disabled="" type="button">Próximamente</button></article></div>
+<p class="empty-search" hidden="" id="emptySearch">No encontramos perfumes con esa búsqueda.</p>
+</section>
+<section class="brands shell" id="marcas">
+<div class="section-heading compact"><div><p class="section-kicker">Firmas reconocidas</p><h2>Marcas destacadas</h2></div></div>
+<div aria-label="Marcas disponibles" class="brand-list"><span>XERJOFF</span><span>DIOR</span><span>GIORGIO ARMANI</span><span>JEAN PAUL GAULTIER</span><span>PACO RABANNE</span><span>VALENTINO</span><span>VERSACE</span><span>YSL</span></div>
+</section>
+</main><div id="appFooter"></div>
+</body>
+</html>

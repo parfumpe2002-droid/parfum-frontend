@@ -1,0 +1,36 @@
+PARFUM - FRONTEND
+=================
+
+CATÁLOGO
+--------
+- 43 productos se cargan desde Neon mediante el backend.
+- 15 perfumes destacados están incluidos localmente como respaldo.
+- Mientras Render inicia aparece "Actualizando catálogo...".
+- Cuando la API responde, las tarjetas locales se reemplazan por las reales.
+- Si el precio o stock está en 0, se muestra "Precio por confirmar" y no se permite comprar.
+
+CONFIGURAR RENDER
+-----------------
+Edita public_html/js/config.js y reemplaza:
+https://TU-SERVICIO-PARFUM.onrender.com/api
+
+SPONSORS
+--------
+El carrusel infinito usa:
+- public_html/imagen/sponsor1.jpg
+- public_html/imagen/sponsor2.png
+- public_html/imagen/sponsor3.png
+
+El controlador es public_html/js/sponsor.js.
+
+PANEL ADMIN
+-----------
+Desde admin.html puedes editar los 43 perfumes, colocar precio y stock,
+subir imágenes a Cloudinary y agregar productos nuevos sin tocar el HTML.
+
+
+NAVEGACIÓN UNIFICADA
+---------------------
+Todas las páginas usan js/layout.js y css/layout.css.
+El menú visible es: Inicio, Perfumes y Ofertas.
+Para editar la cabecera o el footer, modifica únicamente js/layout.js.

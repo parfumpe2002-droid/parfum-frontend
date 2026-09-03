@@ -1,0 +1,13 @@
+PARFUM FRONTEND - CATALOGO/ROUTES/DARK MODE v5
+
+- Solo 20 productos historicos quedan precargados como respaldo mientras Render despierta.
+- Los demas productos se obtienen desde Neon/Render.
+- El frontend reintenta automaticamente el catalogo hasta detectar los 86 productos.
+- /decants/afnan-9pm/ existe y funciona.
+- Se conservaron alias para /decants/9pm/, /9am-dive/ y /odyssey-mandarin-sky/.
+- Cualquier /decants/* que no tenga HTML estatico cae en detalle.html en vez de mostrar 404.
+- Sitemap contiene 86 URLs canonicas.
+- Login despierta Render y reintenta durante un cold start.
+- Cache/PWA usa un BUILD_ID por deploy y network-first para evitar JS/CSS/imagenes antiguas.
+- Refuerzo adicional de contraste en modo oscuro.
+- 20 fallbacks usan precios del Excel para sus decants.

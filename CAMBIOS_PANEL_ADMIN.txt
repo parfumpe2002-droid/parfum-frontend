@@ -1,0 +1,12 @@
+PARFUM - PANEL ADMINISTRADOR COMPLETO
+
+- CRUD completo de productos y categorías libres (incluye perfumes árabes).
+- Edición de precio, stock, nombre, marca, descripción y ficha olfativa.
+- Subida y reemplazo de imágenes mediante Cloudinary.
+- Productos visibles/ocultos y destacados.
+- Dashboard con visitas, visitantes únicos y actividad reciente.
+- Registro anónimo de navegación en MongoDB Atlas, sin guardar IP exacta.
+- Gestión de pedidos, usuarios, roles y mensajes de contacto.
+- Configuración de producción apuntando al backend de Render.
+
+Consulta INSTRUCCIONES_PANEL_ADMIN.md para publicar y crear la cuenta ADMIN.

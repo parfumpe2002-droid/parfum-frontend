@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<meta name="theme-color" content="#0c0d0c"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Parfum"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png"/>
+<script src="js/theme-init.js"></script>
+<title>Administración | Parfum</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="css/app.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<script defer src="js/config.js"></script>
+<script defer src="js/fallback-products.js"></script>
+<script defer src="js/api.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/activity.js"></script>
+<script defer src="js/layout.js"></script>
+<script defer src="js/admin.js"></script>
+<script defer src="js/pwa.js"></script>
+</head>
+<body data-page="admin">
+<div id="appHeader"></div>
+<section class="page-hero admin-hero">
+    <div class="page-shell">
+        <p class="eyebrow">Panel privado</p>
+        <h1>Administración Parfum</h1>
+        <p>Gestiona el catálogo, precios, imágenes, stock, pedidos, clientes, mensajes y actividad del sitio desde un solo lugar.</p>
+    </div>
+</section>
+
+<main class="page-shell content-section admin-page">
+    <div class="admin-tabs" role="tablist" aria-label="Secciones de administración">
+        <button class="active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Resumen</button>
+        <button data-tab="products"><i class="fa-solid fa-spray-can-sparkles"></i> Productos</button>
+        <button data-tab="decants"><i class="fa-solid fa-vial"></i> Decants</button>
+        <button data-tab="orders"><i class="fa-solid fa-box"></i> Pedidos</button>
+        <button data-tab="users"><i class="fa-solid fa-users"></i> Usuarios</button>
+        <button data-tab="messages"><i class="fa-solid fa-envelope"></i> Mensajes</button>
+        <button data-tab="activity"><i class="fa-solid fa-eye"></i> Actividad</button>
+    </div>
+
+    <section class="admin-view active" id="dashboard">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="admin-dashboard-grid">
+            <article class="panel admin-chart-panel">
+                <div class="admin-panel-heading">
+                    <div><p class="section-kicker">Últimos 7 días</p><h2>Visitas al sitio</h2></div>
+                    <span class="admin-live-dot"><i></i> Datos reales</span>
+                </div>
+                <div class="visit-chart" id="visitChart"></div>
+                <div class="chart-legend"><span><i class="visits"></i> Visitas</span><span><i class="visitors"></i> Visitantes únicos</span></div>
+            </article>
+            <article class="panel">
+                <div class="admin-panel-heading">
+                    <div><p class="section-kicker">En tiempo reciente</p><h2>Última actividad</h2></div>
+                    <button class="text-button" data-open-tab="activity">Ver todo</button>
+                </div>
+                <div class="recent-activity-list" id="recentActivity"></div>
+            </article>
+        </div>
+    </section>
+
+    <section class="admin-view" id="products">
+        <div class="panel catalog-note">
+            <strong>Catálogo editable:</strong> cuando coloques un precio mayor a S/ 0 y stock mayor a 0, el botón “Próximamente” cambiará automáticamente a “Agregar al carrito”. Puedes crear perfumes árabes o cualquier categoría nueva sin tocar el código.
+        </div>
+
+        <div class="admin-toolbar panel">
+            <div class="field admin-search-field"><label for="adminProductSearch">Buscar producto</label><input id="adminProductSearch" placeholder="Nombre, marca o SKU"/></div>
+            <div class="field"><label for="adminCategoryFilter">Categoría</label><select id="adminCategoryFilter"><option value="">Todas</option></select></div>
+            <div class="field"><label for="adminStatusFilter">Estado</label><select id="adminStatusFilter"><option value="">Todos</option><option value="active">Activos</option><option value="inactive">Ocultos</option><option value="pending">Sin precio o stock</option></select></div>
+            <button class="primary-btn admin-new-product" id="newProductButton" type="button"><i class="fa-solid fa-plus"></i> Nuevo producto</button>
+        </div>
+
+        <div class="admin-products-layout">
+            <form class="panel admin-product-form" id="productForm">
+                <div class="admin-panel-heading">
+                    <div><p class="section-kicker">Ficha del catálogo</p><h2 id="productFormTitle">Nuevo producto</h2></div>
+                    <button class="icon-button" id="cancelEdit" type="button" aria-label="Limpiar formulario"><i class="fa-solid fa-rotate-left"></i></button>
+                </div>
+                <input id="productId" type="hidden"/>
+
+                <div class="admin-image-editor">
+                    <div class="admin-image-preview"><img id="productImagePreview" src="imagen/perfumes/perfume-default.png" alt="Vista previa del perfume"/></div>
+                    <div>
+                        <label class="upload-button" for="productImageFile"><i class="fa-solid fa-cloud-arrow-up"></i> Elegir imagen</label>
+                        <input accept="image/*" id="productImageFile" type="file" hidden/>
+                        <p>Se subirá a Cloudinary al guardar. Recomendado: PNG o WebP con fondo transparente.</p>
+                        <button class="text-button danger-text" id="removeProductImage" type="button">Quitar imagen de Cloudinary</button>
+                    </div>
+                    <input id="productImageUrl" type="hidden"/>
+                    <input id="productImagePublicId" type="hidden"/>
+                </div>
+
+                <div class="form-grid compact-form-grid">
+                    <div class="field full"><label>Nombre</label><input id="productName" required/></div>
+                    <div class="field"><label>Marca</label><input id="productBrand" required/></div>
+                    <div class="field"><label>Categoría</label><input id="productCategory" list="categoryOptions" required placeholder="Árabe, Diseñador, Nicho..."/><datalist id="categoryOptions"><option value="Diseñador"></option><option value="Nicho"></option><option value="Árabe"></option></datalist></div>
+                    <div class="field"><label>Género</label><select id="productGender"><option>Hombre</option><option>Mujer</option><option>Unisex</option></select></div>
+                    <div class="field"><label>Concentración</label><input id="productConcentration" placeholder="Eau de Parfum, Parfum..."/></div>
+                    <div class="field"><label>Precio desde (automático)</label><input id="productPrice" min="0" readonly step="0.01" type="number" value="0"/></div>
+                    <div class="field"><label>Stock total (automático)</label><input id="productStock" min="0" readonly type="number" value="0"/></div>
+                    <div class="field full presentation-admin-field">
+                        <div class="presentation-admin-heading">
+                            <div><label>Presentaciones, precios y stock</label><small>Agrega los mililitros disponibles. Cada tamaño tiene su propio precio y stock.</small></div>
+                            <button class="secondary-btn" id="addPresentation" type="button"><i class="fa-solid fa-plus"></i> Agregar tamaño</button>
+                        </div>
+                        <div class="presentation-admin-rows" id="presentationRows"></div>
+                    </div>
+                    <div class="field full decant-product-admin-field">
+                        <div class="presentation-admin-heading">
+                            <div><label>Decants de este perfume</label><small>Activa los envases disponibles y define precio y stock por cada presentación.</small></div>
+                            <label class="admin-check inline-check"><input id="productDecantAvailable" type="checkbox" checked/> Permitir pedir en decant</label>
+                        </div>
+                        <div class="product-decant-rows" id="productDecantRows"></div>
+                        <p class="muted">Los diseños e imágenes de los envases se administran en la pestaña <b>Decants</b>.</p>
+                    </div>
+                    <div class="field"><label>SKU</label><input id="productSku" maxlength="40" placeholder="Se genera automáticamente"/></div>
+                    <div class="field"><label>Slug</label><input id="productSlug" maxlength="180" placeholder="Se genera automáticamente"/></div>
+                    <div class="field full"><label>Descripción</label><textarea id="productDescription" rows="4"></textarea></div>
+                    <div class="field"><label>Familia olfativa</label><input id="productFamily"/></div>
+                    <div class="field"><label>Año de lanzamiento</label><input id="productYear" min="1800" max="2100" type="number"/></div>
+                    <div class="field full"><label>Perfumista(s)</label><input id="productPerfumer"/></div>
+                    <div class="field full"><label>Notas de salida</label><textarea id="productTopNotes" rows="2" placeholder="Bergamota | Lavanda | Cardamomo"></textarea></div>
+                    <div class="field full"><label>Notas de corazón</label><textarea id="productHeartNotes" rows="2"></textarea></div>
+                    <div class="field full"><label>Notas de fondo</label><textarea id="productBaseNotes" rows="2"></textarea></div>
+                    <div class="field full"><label>Acordes principales</label><textarea id="productAccords" rows="2"></textarea></div>
+                    <div class="field"><label>Duración aproximada</label><input id="productLongevity" placeholder="8–10 horas"/></div>
+                    <div class="field"><label>Proyección</label><input id="productProjection" placeholder="Alta durante 2–3 horas"/></div>
+                    <div class="field"><label>Estaciones</label><input id="productSeasons" placeholder="Otoño | Invierno"/></div>
+                    <div class="field"><label>Ocasiones</label><input id="productOccasions" placeholder="Citas | Noche | Eventos"/></div>
+                    <div class="field full"><label>Estilo olfativo</label><input id="productStyle"/></div>
+                    <div class="field full"><label>Fuente de referencia interna</label><input id="productReference" type="url"/></div>
+                    <div class="field full"><label>Imagen local de respaldo</label><input id="productFallback" placeholder="imagen/perfumes/perfume-default.png"/></div>
+                    <label class="admin-check"><input id="productFeatured" type="checkbox"/> Mostrar como destacado</label>
+                    <label class="admin-check"><input checked id="productActive" type="checkbox"/> Producto visible</label>
+                </div>
+                <div class="button-row admin-form-actions">
+                    <button class="primary-btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Guardar producto</button>
+                </div>
+                <p class="form-message" id="productMessage"></p>
+            </form>
+
+            <section class="panel admin-product-list-panel">
+                <div class="admin-panel-heading">
+                    <div><p class="section-kicker">Inventario</p><h2>Productos</h2></div>
+                    <span class="admin-count" id="productsCount">0 productos</span>
+                </div>
+                <div id="productsTable"></div>
+            </section>
+        </div>
+    </section>
+
+
+    <section class="admin-view" id="decants">
+        <div class="panel catalog-note">
+            <strong>Envases de decant:</strong> aquí puedes editar las imágenes de 3 ml, 5 ml y 10 ml, agregar más diseños —por ejemplo varias presentaciones de 10 ml— y ocultar los que ya no utilices.
+        </div>
+        <div class="admin-decants-layout">
+            <form class="panel admin-decant-form" id="decantContainerForm">
+                <div class="admin-panel-heading">
+                    <div><p class="section-kicker">Presentación física</p><h2 id="decantFormTitle">Nuevo envase</h2></div>
+                    <button class="icon-button" id="resetDecantForm" type="button" aria-label="Limpiar formulario"><i class="fa-solid fa-rotate-left"></i></button>
+                </div>
+                <input id="decantContainerId" type="hidden"/>
+                <div class="admin-image-editor">
+                    <div class="admin-image-preview decant-image-preview"><img id="decantImagePreview" src="imagen/decants/decant-10ml-premium.png" alt="Vista previa del envase"/></div>
+                    <div>
+                        <label class="upload-button" for="decantImageFile"><i class="fa-solid fa-cloud-arrow-up"></i> Elegir imagen</label>
+                        <input accept="image/*" id="decantImageFile" type="file" hidden/>
+                        <p>Sube solo la imagen del frasco. Puede ser PNG, WebP o JPG.</p>
+                        <button class="text-button danger-text" id="removeDecantImage" type="button">Quitar imagen de Cloudinary</button>
+                    </div>
+                    <input id="decantImageUrl" type="hidden"/>
+                    <input id="decantImagePublicId" type="hidden"/>
+                </div>
+                <div class="form-grid compact-form-grid">
+                    <div class="field full"><label>Nombre de la presentación</label><input id="decantContainerName" required placeholder="Premium degradé 10 ml"/></div>
+                    <div class="field"><label>Mililitros</label><input id="decantContainerMl" type="number" min="1" required value="10"/></div>
+                    <div class="field"><label>Orden visual</label><input id="decantContainerOrder" type="number" min="0" value="0"/></div>
+                    <div class="field full"><label>Descripción</label><textarea id="decantContainerDescription" rows="3"></textarea></div>
+                    <div class="field full"><label>Imagen local de respaldo</label><input id="decantContainerFallback" value="imagen/decants/decant-10ml-premium.png"/></div>
+                    <label class="admin-check"><input id="decantContainerActive" type="checkbox" checked/> Envase visible</label>
+                </div>
+                <button class="primary-btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Guardar envase</button>
+                <p class="form-message" id="decantMessage"></p>
+            </form>
+            <section class="panel admin-decant-list-panel">
+                <div class="admin-panel-heading"><div><p class="section-kicker">Presentaciones</p><h2>Envases disponibles</h2></div><span class="admin-count" id="decantCount">0 envases</span></div>
+                <div id="decantContainersList" class="admin-decant-cards"></div>
+            </section>
+        </div>
+    </section>
+
+    <section class="admin-view" id="orders">
+        <div class="admin-section-heading"><div><p class="section-kicker">Ventas</p><h2>Gestión de pedidos</h2></div></div>
+        <div id="ordersTable"></div>
+    </section>
+
+    <section class="admin-view" id="users">
+        <div class="admin-section-heading"><div><p class="section-kicker">Clientes y equipo</p><h2>Usuarios registrados</h2></div></div>
+        <div id="usersTable"></div>
+    </section>
+
+    <section class="admin-view" id="messages">
+        <div class="admin-section-heading">
+            <div><p class="section-kicker">Atención al cliente</p><h2>Mensajes de contacto</h2></div>
+            <div class="admin-heading-actions">
+                <button class="secondary-btn" id="deleteAnsweredMessages" type="button"><i class="fa-solid fa-broom"></i> Eliminar respondidos</button>
+                <button class="danger-btn" id="clearMessages" type="button"><i class="fa-solid fa-trash-can"></i> Vaciar bandeja</button>
+            </div>
+        </div>
+        <div class="panel admin-retention-note"><i class="fa-solid fa-circle-info"></i><span>Elimina mensajes que ya no necesites para mantener ligera la base de datos. Los mensajes nuevos no se borran automáticamente.</span></div>
+        <div id="messagesTable"></div>
+    </section>
+
+    <section class="admin-view" id="activity">
+        <div class="admin-toolbar panel activity-toolbar">
+            <div class="field"><label for="activityTypeFilter">Tipo de actividad</label><select id="activityTypeFilter"><option value="">Todas</option><option>PAGE_VIEW</option><option>PRODUCT_VIEW</option><option>LOGIN</option><option>REGISTER</option><option>ADD_CART</option><option>FAVORITE</option><option>CONTACT</option><option>ORDER</option></select></div>
+            <div class="field admin-search-field"><label for="activitySearch">Buscar</label><input id="activitySearch" placeholder="Página, producto o correo"/></div>
+            <button class="secondary-btn" id="refreshActivity" type="button"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+            <button class="secondary-btn" id="deleteOldActivity" type="button"><i class="fa-solid fa-clock-rotate-left"></i> Borrar +30 días</button>
+            <button class="danger-btn" id="clearActivity" type="button"><i class="fa-solid fa-trash-can"></i> Vaciar actividad</button>
+        </div>
+        <div class="panel admin-retention-note"><i class="fa-solid fa-database"></i><span>Puedes borrar registros individuales, limpiar los de más de 30 días o vaciar toda la actividad. Esto no elimina usuarios, pedidos ni productos.</span></div>
+        <div id="activityTable"></div>
+    </section>
+</main>
+<div id="appFooter"></div>
+</body>
+</html>

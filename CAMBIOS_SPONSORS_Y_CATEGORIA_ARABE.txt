@@ -1,0 +1,19 @@
+ACTUALIZACIÓN PARFUM — SPONSORS Y CATEGORÍA ÁRABE
+
+1. Se reemplazaron los tres banners del carrusel por las imágenes entregadas:
+   - imagen/sponsor1.jpg
+   - imagen/sponsor2.png
+   - imagen/sponsor3.png
+
+2. La tercera tarjeta del inicio ya no muestra “Decants”. Ahora muestra:
+   - Perfumes árabes
+   - Enlace a productos.html?categoria=Árabe
+   - Imagen de Asad como referencia visual
+
+3. Se eliminó “Decant” como categoría de producto en:
+   - filtro del catálogo
+   - lista sugerida del formulario administrador
+   - endpoint de categorías del backend
+
+4. La administración de decants NO fue eliminada. Sigue disponible como función y pestaña
+   administrativa, porque sirve para configurar los envases y presentaciones de cada perfume.

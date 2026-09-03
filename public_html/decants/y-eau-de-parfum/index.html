@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<meta name="theme-color" content="#0c0d0c"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Parfum"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png"/>
+<script src="js/theme-init.js"></script>
+<meta name="description" content="Compra decants de Y Eau de Parfum de Yves Saint Laurent (YSL) en 3, 5, 10, 20 o 30 ml en Parfum Perú. Consulta también por el frasco completo."/>
+<title>Decant Y Eau de Parfum | Parfum Perú</title>
+<link rel="canonical" href="https://parfum.com.pe/decants/y-eau-de-parfum/"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="css/app.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<script defer src="js/config.js"></script>
+<script defer src="js/fallback-products.js"></script>
+<script defer src="js/perfume-details.js"></script>
+<script defer src="js/api.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/activity.js"></script>
+<script defer src="js/layout.js"></script>
+<script defer src="js/detalle.js"></script>
+<script defer src="js/pwa.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Decant Y Eau de Parfum", "brand": {"@type": "Brand", "name": "Yves Saint Laurent (YSL)"}, "description": "Compra decants de Y Eau de Parfum de Yves Saint Laurent (YSL) en 3, 5, 10, 20 o 30 ml en Parfum Perú. Consulta también por el frasco completo.", "offers": {"@type": "AggregateOffer", "priceCurrency": "PEN", "availability": "https://schema.org/InStock", "url": "https://parfum.com.pe/decants/y-eau-de-parfum/", "lowPrice": 25.0, "highPrice": 175.0}}</script>
+</head>
+<body data-page="detalle">
+<div id="appHeader"></div>
+<main class="page-shell content-section detail-page">
+<div class="status-line" id="detailStatus"><span class="spinner"></span> Actualizando información…</div>
+<section class="detail-grid" id="detailGrid"></section>
+<section class="fragrance-profile" id="fragranceProfile" aria-live="polite"></section>
+<section class="reviews">
+<div class="section-heading-row">
+<div><p class="section-kicker">Comunidad Parfum</p><h2 class="page-title detail-section-title">Reseñas</h2></div>
+</div>
+<div class="two-col">
+<div class="panel" id="reviewsList"></div>
+<form class="panel" id="reviewForm">
+<h3>Comparte tu experiencia</h3>
+<div class="field"><label for="rating">Puntuación</label><select id="rating" required><option value="5">5 - Excelente</option><option value="4">4 - Muy bueno</option><option value="3">3 - Bueno</option><option value="2">2 - Regular</option><option value="1">1 - Malo</option></select></div>
+<div class="field"><label for="reviewComment">Comentario</label><textarea id="reviewComment" maxlength="1000" required rows="5"></textarea></div>
+<div class="button-row">
+<button class="primary-btn" id="reviewSubmit" type="submit">Publicar reseña</button>
+<button class="secondary-btn" id="reviewCancel" type="button" hidden>Cancelar edición</button>
+</div>
+<p class="muted">Debes iniciar sesión para publicar. Si ya reseñaste este perfume, tu nueva reseña actualizará la anterior.</p>
+</form>
+</div>
+</section>
+</main>
+<div id="appFooter"></div>
+</body>
+</html>
