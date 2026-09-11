@@ -1,0 +1,23 @@
+CORRECCIÓN DE FRONTEND - NAVEGACIÓN Y FOOTER UNIFICADOS
+
+1. El menú principal ahora muestra únicamente:
+   - Inicio
+   - Perfumes
+   - Ofertas
+
+2. Se creó un layout compartido para todas las páginas:
+   - js/layout.js genera la misma cabecera, navegación, buscador, menú de cuenta y footer.
+   - css/layout.css mantiene exactamente el mismo estilo visual en todo el sitio.
+
+3. Se corrigió index.html para que utilice el mismo layout que catálogo, detalle,
+   favoritos, carrito, contacto, login, registro, perfil, pedidos y administración.
+
+4. Se agregó ofertas.html con productos destacados y respaldo local mientras Render inicia.
+
+5. Se conservaron:
+   - Los 3 sponsors del carrusel infinito.
+   - Los 15 productos con imágenes locales de respaldo.
+   - El mensaje "Actualizando catálogo...".
+   - La conexión preparada para Render, Neon, MongoDB Atlas y Cloudinary.
+
+Para cambiar el menú o el footer en el futuro, edita solamente js/layout.js.

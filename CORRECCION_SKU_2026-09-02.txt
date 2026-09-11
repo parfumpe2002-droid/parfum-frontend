@@ -1,0 +1,5 @@
+CORRECCIÓN DE COMPATIBILIDAD DE SKU — 2026-09-02
+
+Este frontend fue sincronizado con el backend corregido para que los productos existentes conserven sus SKU históricos y los perfumes nuevos usen SKU PAR-D26-xxx.
+
+No cambia el diseño ni la lógica principal de decants/WhatsApp/SEO. La corrección evita que los productos fallback y las fichas locales usen identificadores distintos a los del backend/Neon.

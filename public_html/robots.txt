@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://parfum.com.pe/sitemap.xml
+
+Sitemap: https://parfum.com.pe/sitemap-live.xml

@@ -1,0 +1,12 @@
+PARFUM FRONTEND v7.4 - DETALLE DINAMICO PARA PRODUCTOS CREADOS DESDE ADMIN
+
+Correccion:
+- detalle.html ahora usa <base href="/">.
+- Esto permite que cualquier producto nuevo creado desde el Panel Admin funcione en
+  /decants/<slug>/ aunque no exista una carpeta HTML estatica para ese producto.
+- CSS, JS, iconos y manifest se cargan desde la raiz del sitio en lugar de intentar
+  cargarse dentro de /decants/<slug>/.
+- El catch-all de Netlify /decants/* -> /detalle.html sigue funcionando y detalle.js
+  obtiene el slug de la URL para consultar el producto actual al backend.
+
+No se modificaron productos, precios, stock ni imagenes del Admin.

@@ -1,0 +1,10 @@
+PARFUM - FIX FINAL FRONTEND
+
+Cambios principales:
+- Solo 20 productos históricos quedan precargados como respaldo mientras Render despierta.
+- Los demás productos se leen desde el backend/Neon.
+- Se hace una segunda lectura automática ~18 s después para recoger productos sincronizados al arrancar Render.
+- Flujo principal de compra: decants. Frasco completo: WhatsApp +51 963 257 194.
+- Service Worker actualizado a network-first para evitar CSS/JS/imágenes viejos después de un push.
+- Refuerzo de contraste para modo oscuro en formularios, fichas, panel admin, tarjetas, tablas y textos secundarios.
+- Mensajes de login más claros cuando la instancia gratuita de Render está despertando.

@@ -1,0 +1,11 @@
+PARFUM FRONTEND v7.2 - BANNERS DEL CLIENTE
+
+Se reemplazaron únicamente las 3 imágenes del carrusel principal usando exactamente las imágenes entregadas por el cliente:
+
+- hero-arabes-premium.jpg <- sponsor3.jpg (Asad + Khamrah + Haramain Amber Oud Gold)
+- hero-nicho-premium.jpg <- sponsor2.jpg (Althaïr + Erba Pura + Torino 21)
+- hero-designer-premium.jpg <- sponsor1(2).jpg (Valentino Uomo Intense + Y EDP + Dior Homme Intense + Stronger With You Intensely)
+
+No se regeneraron ni reinterpretaron las imágenes.
+Se actualizó únicamente el texto del banner árabe para que coincida con Asad, Khamrah y Amber Oud Gold.
+El resto del frontend v7.1 permanece igual.

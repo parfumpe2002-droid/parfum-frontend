@@ -1,0 +1,7 @@
+PARFUM FRONTEND v7.6 — imágenes fallback corregidas
+
+Cambios únicamente en frontend:
+- Hawas Ice ahora usa su imagen real sin fondo durante la carga inicial mientras Render despierta.
+- Valentino Uomo Born in Roma Coral Fantasy ahora usa la imagen proporcionada por el cliente, sin fondo.
+- No se modificó backend, precios, stock ni datos almacenados en Neon/MongoDB/Cloudinary.
+- Se conserva todo lo incluido en v7.5 (SEO, sitemap live, panel admin, banners, paginación y demás mejoras).

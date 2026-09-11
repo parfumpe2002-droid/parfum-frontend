@@ -1,0 +1,8 @@
+Corrección aplicada al panel de Productos:
+
+- Se reemplazó la tabla ancha por tarjetas responsivas.
+- El nombre del producto y el botón Editar siempre permanecen visibles.
+- Ya no existe desplazamiento horizontal para gestionar productos.
+- El inventario tiene desplazamiento vertical independiente en escritorio.
+- Al editar, el formulario vuelve automáticamente a la parte superior.
+- En tablet y celular, formulario y listado se apilan correctamente.

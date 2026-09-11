@@ -1,0 +1,26 @@
+PARFUM — ACTUALIZACIÓN PRESENTACIONES + PWA
+
+BACKEND
+- Nueva entidad y tabla producto_presentaciones.
+- Mililitros, precio, stock, activo y orden por presentación.
+- Respuesta de productos incluye presentaciones.
+- Carrito distingue el mismo perfume por presentación.
+- Pedidos guardan presentacionId, mililitros y etiqueta.
+- El administrador edita tamaños, precios y stock.
+- Precio desde y stock total se calculan automáticamente.
+- 43 perfumes con 121 presentaciones referenciales.
+- SQL de migración Neon y script Atlas incluidos.
+
+FRONTEND
+- Selector de ml en el detalle del perfume.
+- Precio y stock cambian al elegir tamaño.
+- Carrito y pedidos muestran los ml seleccionados.
+- Panel admin con editor dinámico de tamaños.
+- Modo noche persistente.
+- Menú hamburguesa rediseñado.
+- PWA instalable con iconos Parfum.
+- Favicon nuevo.
+- Notificación de nueva versión y botón Actualizar.
+- Service worker, página sin conexión y 404.
+- Build Netlify versiona el service worker en cada commit.
+- Mejoras responsive para celular, tablet y escritorio.

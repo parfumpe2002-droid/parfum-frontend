@@ -1,0 +1,10 @@
+CORRECCIÓN v7.1 - BANNERS
+
+Se restauró el estilo fotográfico premium del carrusel original.
+Ya no se renderizan frascos como tarjetas flotantes.
+
+Banner 1: Althaïr + Erba Pura + Torino 21
+Banner 2: Valentino Intense + Y EDP + Dior Homme Intense + Stronger With You Intensely
+Banner 3: Khamrah + Amber Oud Gold + Mandarin Sky
+
+El resto de cambios de v7 (seguridad, redes sociales, ficha de producto y marcas) se conserva.

@@ -1,0 +1,6 @@
+PARFUM FRONTEND v6 - VERIFICADO
+
+- Solo 20 productos comerciales de respaldo mientras Render despierta.
+- 86 fichas SEO/rutas disponibles.
+- perfume-details.js contiene la ficha olfativa de los 86 para respaldo de detalle.
+- Productos reales/precios llegan desde Neon cuando Render responde.

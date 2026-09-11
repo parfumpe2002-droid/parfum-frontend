@@ -1,0 +1,16 @@
+ORDEN RECOMENDADO DE DEPLOY
+
+1) Subir primero el BACKEND v1.1.0 a GitHub y esperar el deploy de Render.
+2) Verificar: https://parfum-backend-jvcw.onrender.com/api/health
+   Debe incluir: "version":"1.1.0"
+3) En Render > Environment revisar:
+   CORS_ORIGINS=https://parfum.com.pe,https://www.parfum.com.pe,https://parfum-store-app.netlify.app
+   APP_TOKEN_DAYS=7
+   APP_CATALOG_SYNC=false
+   APP_SEED_DATA=false
+4) NO borrar ni reinicializar Neon. Los precios, stock e imágenes de Admin deben conservarse.
+5) Subir este FRONTEND a GitHub/Netlify.
+6) Probar en incógnito: catálogo, detalle, login, carrito, comprobante, admin, WhatsApp y redes.
+7) Reiniciar una vez Render y comprobar que los precios/stock/imágenes editados desde Admin siguen iguales.
+
+Nota: contacto@parfum.pe es un enlace de correo. Para que reciba correos reales hay que contratar/configurar un proveedor de correo y sus registros MX; comprar el dominio no crea automáticamente ese buzón.

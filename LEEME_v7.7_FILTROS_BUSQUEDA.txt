@@ -1,0 +1,12 @@
+PARFUM FRONTEND v7.7 - FILTROS Y BUSQUEDA
+
+Cambios:
+- Corrige el filtro que podía quedarse en una página alta (2-6) y devolver 0 resultados al iniciar una búsqueda nueva.
+- El catálogo completo se carga para filtrar del lado del frontend, evitando falsos "sin resultados" por paginación.
+- Búsqueda por nombre, marca, categoría, género, concentración, SKU, descripción, perfumista, familia olfativa, notas, acordes, estilo y ocasiones.
+- La búsqueda ignora mayúsculas/minúsculas y tildes.
+- Nuevo filtro "Para quién": Todos / Para él / Para ella / Unisex.
+- Categoría, género y orden se aplican al cambiar la selección.
+- El buscador también filtra mientras escribes y sigue aceptando Enter/botón Aplicar filtros.
+- Paginación local de 16 productos, siempre reiniciando en página 1 al cambiar filtros.
+- Conserva los banners, imágenes fallback, SEO, sitemap y demás mejoras de v7.6.

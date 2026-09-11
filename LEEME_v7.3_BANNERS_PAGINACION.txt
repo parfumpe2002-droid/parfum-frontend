@@ -1,0 +1,9 @@
+PARFUM FRONTEND v7.3
+
+Cambios:
+- Los 3 banners del carrusel usan las 3 imágenes entregadas por el cliente.
+- Banner árabe: Khamrah + Amber Oud Gold + Mandarin Sky.
+- Banner nicho: Althaïr + Erba Pura + Torino 21.
+- Banner diseñador: Valentino Uomo Intense + Y EDP + Dior Homme Intense + Stronger With You Intensely.
+- Se corrigió la palabra VALENTINO a tono rosa/piel, según la referencia del frasco.
+- Al pulsar una página del catálogo (2, 3, 4, etc.), la vista vuelve automáticamente al inicio de la cuadrícula de productos. Funciona en móvil y escritorio.
