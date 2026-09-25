@@ -1,0 +1,20 @@
+name: Performance branch validation
+
+on:
+  push:
+    branches: [ "perf-optimization-20260924" ]
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check changed JavaScript
+        run: |
+          node --check public_html/js/store.js
+          node --check public_html/js/admin.js
+          node --check public_html/js/detalle.js
