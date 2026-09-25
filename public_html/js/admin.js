@@ -697,9 +697,12 @@
             if (!confirm(nextActive ? "¿Activar este producto?" : "¿Ocultar este producto del catálogo?")) return;
             try {
                 const body = productRequestBody({...product, activo:nextActive});
-                await ParfumAPI.request(`/productos/${product.id}`, {method:"PUT", body});
+                const saved = await ParfumAPI.request(`/productos/${product.id}`, {method:"PUT", body});
+                const index = products.findIndex(item => String(item.id) === String(product.id));
+                if (index >= 0) products[index] = saved;
+                renderProducts();
                 ParfumAPI.toast(nextActive ? "Producto activado" : "Producto ocultado");
-                await Promise.all([loadProducts(), loadSummary()]);
+                loadSummary();
             } catch (error) {
                 ParfumAPI.toast(error.message, "error");
             }
@@ -746,6 +749,8 @@
 
             const body = productRequestBody();
             const id = $("productId").value;
+            const editingId = id ? String(id) : null;
+            const previous = editingId ? products.find(item => String(item.id) === editingId) : null;
             const saved = await ParfumAPI.request(id ? `/productos/${id}` : "/productos", {
                 method:id ? "PUT" : "POST",
                 body
@@ -755,10 +760,23 @@
                 ParfumAPI.request(`/imagenes?publicId=${encodeURIComponent(originalImagePublicId)}`, {method:"DELETE"}).catch(() => {});
             }
 
+            if (editingId) {
+                const index = products.findIndex(item => String(item.id) === editingId);
+                if (index >= 0) products[index] = saved;
+                else products.unshift(saved);
+            } else {
+                products.unshift(saved);
+            }
+            products.sort((a, b) => new Date(b.actualizadoEn || 0) - new Date(a.actualizadoEn || 0));
+
             resetProduct();
+            renderProducts();
+            loadCategories();
             message.textContent = "Producto guardado correctamente";
             message.className = "form-message ok";
-            await Promise.all([loadProducts(), loadSummary()]);
+
+            const activeChanged = previous && Boolean(previous.activo) !== Boolean(saved.activo);
+            if (!editingId || activeChanged) loadSummary();
         } catch (error) {
             message.textContent = error.message;
             message.className = "form-message error";
