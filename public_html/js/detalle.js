@@ -34,6 +34,7 @@
     let selectedDecant = ParfumAPI.defaultDecant(product);
     let quantity = 1;
     let currentUserReview = null;
+    let reviewsCache = [];
     let detailRetryAttempt = 0;
     let detailRetryTimer = null;
 
@@ -414,35 +415,44 @@
         reviewCancel.hidden = true;
     }
 
-    async function loadReviews() {
+    function renderReviews(reviews) {
         const box = document.getElementById("reviewsList");
         const viewer = ParfumAPI.getUser();
+        reviewsCache = Array.isArray(reviews) ? reviews : [];
+        currentUserReview = viewer
+            ? reviewsCache.find(review => String(review.usuarioId) === String(viewer.id)) || null
+            : null;
+
+        if (currentUserReview) {
+            document.getElementById("rating").value = String(currentUserReview.puntuacion || 5);
+            document.getElementById("reviewComment").value = currentUserReview.comentario || "";
+            reviewSubmit.textContent = "Actualizar reseña";
+            reviewCancel.hidden = false;
+        } else {
+            resetReviewForm();
+        }
+
+        box.innerHTML = reviewsCache.length
+            ? reviewsCache.map(review => {
+                const own = viewer && String(review.usuarioId) === String(viewer.id);
+                const canDelete = own || viewer?.rol === "ADMIN";
+                return `<article class="review-card" data-review-id="${esc(review.id)}">
+                    <div class="review-head"><div><b>${esc(review.nombreUsuario)}</b><div class="stars">${'<i class="fa-solid fa-star"></i>'.repeat(review.puntuacion)}</div></div>
+                    ${canDelete ? `<div class="review-actions">${own ? `<button class="icon-button" type="button" data-review-edit="${esc(review.id)}" aria-label="Editar reseña"><i class="fa-regular fa-pen-to-square"></i></button>` : ""}<button class="icon-button" type="button" data-review-delete="${esc(review.id)}" aria-label="Eliminar reseña"><i class="fa-regular fa-trash-can"></i></button></div>` : ""}</div>
+                    <p class="muted">${esc(review.comentario)}</p>
+                </article>`;
+            }).join("")
+            : '<p class="muted">Aún no hay reseñas. Sé el primero en comentar.</p>';
+    }
+
+    async function loadReviews() {
+        const box = document.getElementById("reviewsList");
         if (!/^\d+$/.test(String(product?.id || ""))) {
             box.innerHTML = '<p class="muted">Las reseñas se cargarán cuando el catálogo termine de actualizarse.</p>';
             return;
         }
         try {
-            const reviews = await ParfumAPI.request(`/resenas/producto/${product.id}`, {auth:false});
-            currentUserReview = viewer ? reviews.find(review => String(review.usuarioId) === String(viewer.id)) || null : null;
-            if (currentUserReview) {
-                document.getElementById("rating").value = String(currentUserReview.puntuacion || 5);
-                document.getElementById("reviewComment").value = currentUserReview.comentario || "";
-                reviewSubmit.textContent = "Actualizar reseña";
-                reviewCancel.hidden = false;
-            } else {
-                resetReviewForm();
-            }
-            box.innerHTML = reviews.length
-                ? reviews.map(review => {
-                    const own = viewer && String(review.usuarioId) === String(viewer.id);
-                    const canDelete = own || viewer?.rol === "ADMIN";
-                    return `<article class="review-card" data-review-id="${esc(review.id)}">
-                        <div class="review-head"><div><b>${esc(review.nombreUsuario)}</b><div class="stars">${'<i class="fa-solid fa-star"></i>'.repeat(review.puntuacion)}</div></div>
-                        ${canDelete ? `<div class="review-actions">${own ? `<button class="icon-button" type="button" data-review-edit="${esc(review.id)}" aria-label="Editar reseña"><i class="fa-regular fa-pen-to-square"></i></button>` : ""}<button class="icon-button" type="button" data-review-delete="${esc(review.id)}" aria-label="Eliminar reseña"><i class="fa-regular fa-trash-can"></i></button></div>` : ""}</div>
-                        <p class="muted">${esc(review.comentario)}</p>
-                    </article>`;
-                }).join("")
-                : '<p class="muted">Aún no hay reseñas. Sé el primero en comentar.</p>';
+            renderReviews(await ParfumAPI.request(`/resenas/producto/${product.id}`, {auth:false}));
         } catch {
             box.innerHTML = '<p class="muted">Las reseñas se cargarán cuando el servidor esté disponible.</p>';
         }
@@ -455,9 +465,8 @@
             if (!confirm("¿Eliminar esta reseña?")) return;
             try {
                 await ParfumAPI.request(`/resenas/${encodeURIComponent(deleteButton.dataset.reviewDelete)}`, {method:"DELETE"});
+                renderReviews(reviewsCache.filter(review => String(review.id) !== String(deleteButton.dataset.reviewDelete)));
                 ParfumAPI.toast("Reseña eliminada");
-                resetReviewForm();
-                loadReviews();
             } catch (error) {
                 ParfumAPI.toast(error.message, "error");
             }
@@ -482,12 +491,17 @@
             return;
         }
         try {
-            await ParfumAPI.request(`/resenas/producto/${product.id}`, {
+            const wasEditing = Boolean(currentUserReview);
+            const saved = await ParfumAPI.request(`/resenas/producto/${product.id}`, {
                 method:"POST",
                 body:{puntuacion:Number(document.getElementById("rating").value), comentario:document.getElementById("reviewComment").value}
             });
-            ParfumAPI.toast(currentUserReview ? "Reseña actualizada" : "Reseña publicada");
-            await loadReviews();
+            const nextReviews = reviewsCache.filter(review =>
+                String(review.id) !== String(saved.id)
+                && String(review.usuarioId) !== String(saved.usuarioId)
+            );
+            renderReviews([saved, ...nextReviews]);
+            ParfumAPI.toast(wasEditing ? "Reseña actualizada" : "Reseña publicada");
         } catch (error) {
             ParfumAPI.toast(error.message, "error");
         }

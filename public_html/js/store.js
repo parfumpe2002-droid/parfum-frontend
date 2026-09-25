@@ -64,6 +64,27 @@
         return {type, variant};
     }
 
+    function currentBadgeValue(selector) {
+        const value = document.querySelector(selector)?.textContent;
+        const parsed = Number.parseInt(value || "0", 10);
+        return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function setBadgeCounts(cartCount, favoriteCount) {
+        if (cartCount != null) {
+            document.querySelectorAll("[data-cart-count]").forEach(element => element.textContent = String(Math.max(0, cartCount)));
+        }
+        if (favoriteCount != null) {
+            document.querySelectorAll("[data-fav-count]").forEach(element => element.textContent = String(Math.max(0, favoriteCount)));
+        }
+    }
+
+    function adjustBadges({cartDelta = 0, favoriteDelta = 0, cartCount = null, favoriteCount = null} = {}) {
+        const nextCart = cartCount == null ? currentBadgeValue("[data-cart-count]") + cartDelta : cartCount;
+        const nextFavorites = favoriteCount == null ? currentBadgeValue("[data-fav-count]") + favoriteDelta : favoriteCount;
+        setBadgeCounts(nextCart, nextFavorites);
+    }
+
     async function cart() {
         if (ParfumAPI.isLogged()) return ParfumAPI.request("/carrito/me");
         return parse(CART);
@@ -97,7 +118,7 @@
                 productoNombre: realProduct.nombre || product.nombre,
                 detalle: `${selection.variant?.etiqueta || selection.type} · Cantidad: ${quantity}`
             });
-            await updateBadges();
+            adjustBadges({cartDelta: Number(quantity || 0)});
             return result;
         }
 
@@ -126,7 +147,7 @@
         if (found) found.cantidad += quantity;
         else list.push(itemCandidate);
         save(CART, list);
-        await updateBadges();
+        setBadgeCounts(list.reduce((total, item) => total + Number(item.cantidad || 1), 0), currentBadgeValue("[data-fav-count]"));
         window.ParfumActivity?.track("ADD_CART", {
             productoId: product.id ?? product.productoId,
             productoNombre: product.nombre,
@@ -142,7 +163,7 @@
         const productId = item.productoId ?? item.id ?? item.sku ?? item.slug;
         const resolvedType = normalizeType(item.tipoItem, item);
         if (ParfumAPI.isLogged()) {
-            return ParfumAPI.request(`/carrito/${productId}`, {
+            const result = await ParfumAPI.request(`/carrito/${productId}`, {
                 method:"PUT",
                 body:{
                     cantidad:quantity,
@@ -151,13 +172,15 @@
                     tipoItem:resolvedType
                 }
             });
+            adjustBadges({cartDelta: Number(quantity || 0) - Number(item.cantidad || 0)});
+            return result;
         }
         const list = parse(CART);
         const key = cartKeyOf(item);
         const found = list.find(entry => cartKeyOf(entry) === key);
         if (found) found.cantidad = quantity;
         save(CART, list);
-        await updateBadges();
+        setBadgeCounts(list.reduce((total, entry) => total + Number(entry.cantidad || 1), 0), currentBadgeValue("[data-fav-count]"));
         return list;
     }
 
@@ -172,17 +195,19 @@
             if (resolvedType === "DECANT" && item.productoDecantId != null) query.set("productoDecantId", item.productoDecantId);
             if (resolvedType === "BOTELLA" && item.presentacionId != null) query.set("presentacionId", item.presentacionId);
             await ParfumAPI.request(`/carrito/${productId}?${query}`, {method:"DELETE"});
+            adjustBadges({cartDelta: -Number(item.cantidad || 1)});
         } else {
             const key = cartKeyOf(item);
-            save(CART, parse(CART).filter(entry => cartKeyOf(entry) !== key));
+            const list = parse(CART).filter(entry => cartKeyOf(entry) !== key);
+            save(CART, list);
+            setBadgeCounts(list.reduce((total, entry) => total + Number(entry.cantidad || 1), 0), currentBadgeValue("[data-fav-count]"));
         }
-        await updateBadges();
     }
 
     async function clearCart() {
         if (ParfumAPI.isLogged()) await ParfumAPI.request("/carrito/me", {method:"DELETE"});
         else save(CART, []);
-        await updateBadges();
+        setBadgeCounts(0, currentBadgeValue("[data-fav-count]"));
     }
 
     async function favorites() {
@@ -244,7 +269,7 @@
             };
             save(FAV, exists ? list.filter(entry => cartKeyOf(entry) !== key) : [...list, item]);
         }
-        await updateBadges();
+        adjustBadges({favoriteDelta: exists ? -1 : 1});
         window.ParfumActivity?.track("FAVORITE", {
             productoId: product.id ?? product.productoId,
             productoNombre: product.nombre,
@@ -305,8 +330,7 @@
         try {
             const [cartItems, favoriteItems] = await Promise.all([cart(), favorites()]);
             const count = cartItems.reduce((total, item) => total + Number(item.cantidad || 1), 0);
-            document.querySelectorAll("[data-cart-count]").forEach(element => element.textContent = String(count));
-            document.querySelectorAll("[data-fav-count]").forEach(element => element.textContent = String(favoriteItems.length));
+            setBadgeCounts(count, favoriteItems.length);
         } catch {}
     }
 
