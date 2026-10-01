@@ -1097,8 +1097,21 @@
         }
     });
 
+    window.addEventListener("hashchange", () => {
+        const requested = location.hash.replace("#", "");
+        if (["dashboard","products","decants","orders","users","messages","activity"].includes(requested)) {
+            activateTab(requested);
+            window.ParfumPWA?.syncPushContext?.();
+        }
+    });
+
     syncKeepAlive();
     resetDecantForm();
     loadDecantContainers().finally(() => resetProduct());
     loadSummary();
+
+    const requestedTab = location.hash.replace("#", "");
+    if (["dashboard","products","decants","orders","users","messages","activity"].includes(requestedTab)) {
+        activateTab(requestedTab);
+    }
 })();
