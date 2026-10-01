@@ -185,6 +185,7 @@
     syncThemeControls();
 
     document.getElementById("logoutButton")?.addEventListener("click", async () => {
+        try { await window.ParfumPWA?.unsubscribeNotificationsAccount?.(); } catch {}
         try { await ParfumAPI.request("/auth/logout", {method:"POST"}); } catch {}
         ParfumAPI.clearSession();
         location.href = "index.html";
