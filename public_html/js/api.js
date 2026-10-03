@@ -4,17 +4,23 @@
     const USER_KEY = "parfum_usuario";
     const DEFAULT_IMAGE = "imagen/perfumes/perfume-default.png";
 
-    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+    function getToken() { return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY); }
     function getUser() {
         try { return JSON.parse(localStorage.getItem(USER_KEY) || "null"); }
         catch { return null; }
     }
     function setSession(response) {
-        localStorage.setItem(TOKEN_KEY, response.token);
+        localStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(TOKEN_KEY);
+        if (response.usuario?.rol === "ADMIN") {
+            sessionStorage.setItem(TOKEN_KEY, response.token);
+        } else {
+            localStorage.setItem(TOKEN_KEY, response.token);
+        }
         localStorage.setItem(USER_KEY, JSON.stringify(response.usuario));
     }
     function updateUser(user) { localStorage.setItem(USER_KEY, JSON.stringify(user)); }
-    function clearSession() { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); }
+    function clearSession() { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); }
     function isLogged() { return Boolean(getToken() && getUser()); }
     function isAdmin() { return getUser()?.rol === "ADMIN"; }
 
