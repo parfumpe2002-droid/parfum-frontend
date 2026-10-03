@@ -104,7 +104,7 @@
                         <p>Perfumes nicho, de diseñador y árabes seleccionados para ayudarte a encontrar una firma personal.</p>
                         <button class="footer-install" type="button" data-install-app hidden><i class="fa-solid fa-download"></i> Instalar aplicación</button>
                     </div>
-                    <div><h3>Información</h3><a href="index.html">Inicio</a><a href="contacto.html">Contacto</a><a href="pedidos.html">Seguimiento de pedido</a></div>
+                    <div><h3>Información</h3><a href="index.html">Inicio</a><a href="contacto.html">Contacto</a><a href="pedidos.html">Seguimiento de pedido</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a><a href="terminos.html">Términos y condiciones</a><a href="libro-reclamaciones.html">Libro de Reclamaciones</a><button class="footer-cookie-settings" type="button" data-cookie-settings>Configurar cookies</button></div>
                     <div><h3>Comprar</h3><a href="productos.html">Perfumes</a><a href="ofertas.html">Ofertas</a><a href="favoritos.html">Favoritos</a><a href="carrito.html">Carrito</a></div>
                     <div><h3>Mi cuenta</h3><a href="perfil.html">Perfil</a><a href="pedidos.html">Mis pedidos</a><a href="login.html">Iniciar sesión</a></div>
                     <div class="newsletter"><h3>Síguenos</h3><div class="socials"><a href="https://www.instagram.com/parfum_pe_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @parfum_pe_"><i class="fa-brands fa-instagram"></i></a><a href="https://www.tiktok.com/@Parfum_pe" target="_blank" rel="noopener noreferrer" aria-label="TikTok @Parfum_pe"><i class="fa-brands fa-tiktok"></i></a><a href="https://www.tiktok.com/@Parfum_pe2" target="_blank" rel="noopener noreferrer" aria-label="TikTok @Parfum_pe2"><i class="fa-brands fa-tiktok"></i></a></div><p>Instagram @parfum_pe_ · TikTok @Parfum_pe / @Parfum_pe2</p><form id="newsletterForm"><label class="sr-only" for="newsletterEmail">Correo electrónico</label><input id="newsletterEmail" type="email" placeholder="Tu correo electrónico"><button type="submit" aria-label="Suscribirme"><i class="fa-solid fa-arrow-right"></i></button></form></div>
@@ -198,6 +198,59 @@
         ParfumAPI.toast("Gracias por suscribirte");
         input.value = "";
     });
+
+    const CONSENT_KEY = "parfum_privacy_consent_v1";
+
+    function readConsent() {
+        try { return JSON.parse(localStorage.getItem(CONSENT_KEY) || "null"); }
+        catch { return null; }
+    }
+
+    function saveConsent(analytics) {
+        const consent = {
+            essential:true,
+            analytics:Boolean(analytics),
+            marketing:false,
+            version:1,
+            updatedAt:new Date().toISOString()
+        };
+        localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
+        if (!consent.analytics) localStorage.removeItem("parfum_visitor_session_v1");
+        window.dispatchEvent(new CustomEvent("parfum:privacy-consent", {detail:consent}));
+        document.getElementById("privacyConsent")?.remove();
+        return consent;
+    }
+
+    function showPrivacyConsent(force = false) {
+        if (!force && readConsent()) return;
+        document.getElementById("privacyConsent")?.remove();
+        const box = document.createElement("aside");
+        box.id = "privacyConsent";
+        box.className = "privacy-consent";
+        box.setAttribute("role", "dialog");
+        box.setAttribute("aria-label", "Preferencias de privacidad");
+        box.innerHTML = `
+            <div class="privacy-consent-copy">
+                <span class="privacy-consent-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                <div><b>Tu privacidad en Parfum</b><p>Usamos almacenamiento necesario para sesión, carrito, preferencias y seguridad. La analítica interna es opcional y solo se activa con tu consentimiento. No usamos cookies publicitarias actualmente.</p><a href="cookies.html">Ver política de cookies</a></div>
+            </div>
+            <div class="privacy-consent-actions">
+                <button class="secondary-btn" type="button" data-consent-essential>Solo necesarias</button>
+                <button class="primary-btn" type="button" data-consent-analytics>Aceptar analítica</button>
+            </div>`;
+        document.body.appendChild(box);
+        box.querySelector("[data-consent-essential]")?.addEventListener("click", () => saveConsent(false));
+        box.querySelector("[data-consent-analytics]")?.addEventListener("click", () => saveConsent(true));
+    }
+
+    document.addEventListener("click", event => {
+        if (event.target.closest("[data-cookie-settings]")) {
+            event.preventDefault();
+            showPrivacyConsent(true);
+        }
+    });
+
+    setTimeout(() => showPrivacyConsent(false), 250);
 
     ParfumStore.updateBadges();
     setTimeout(() => window.ParfumPWA?.syncInstallButtons(), 0);
