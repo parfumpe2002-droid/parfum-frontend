@@ -11,6 +11,7 @@
     let orders = [];
     let users = [];
     let messages = [];
+    let claims = [];
     let activities = [];
     let decantContainers = [];
     let originalImagePublicId = "";
@@ -1025,6 +1026,41 @@
         }
     });
 
+
+    async function loadClaims() {
+        try {
+            claims = await ParfumAPI.request("/reclamos");
+            $("claimsTable").innerHTML = table(
+                ["Fecha", "Tipo", "Consumidor", "Detalle", "Pedido del consumidor", "Estado"],
+                claims.map(item => `<tr>
+                    <td>${esc(dateTime(item.creadoEn))}</td>
+                    <td><b>${esc(item.tipo)}</b><br><small class="muted">${esc(item.pedidoReferencia || "Sin pedido asociado")}</small></td>
+                    <td><b>${esc(item.nombre)}</b><br><span class="muted">${esc(item.documento)}</span><br><a class="admin-mail-link" href="mailto:${encodeURIComponent(item.correo)}">${esc(item.correo)}</a><br><small class="muted">${esc(item.telefono)}</small></td>
+                    <td><p class="admin-message-copy">${esc(item.detalle)}</p></td>
+                    <td><p class="admin-message-copy">${esc(item.pedidoConsumidor)}</p></td>
+                    <td><select data-claim-status="${esc(item.id)}">${["RECIBIDO","EN_PROCESO","RESPONDIDO","CERRADO"].map(status => `<option ${status === item.estado ? "selected" : ""}>${status}</option>`).join("")}</select></td>
+                </tr>`),
+                "No hay reclamos ni quejas registrados."
+            );
+        } catch (error) {
+            $("claimsTable").innerHTML = `<p>${esc(error.message)}</p>`;
+        }
+    }
+
+    $("claimsTable")?.addEventListener("change", async event => {
+        if (!event.target.matches("[data-claim-status]")) return;
+        try {
+            await ParfumAPI.request(`/reclamos/${encodeURIComponent(event.target.dataset.claimStatus)}/estado`, {
+                method:"PATCH",
+                body:{estado:event.target.value}
+            });
+            ParfumAPI.toast("Estado del reclamo actualizado");
+        } catch (error) {
+            ParfumAPI.toast(error.message, "error");
+            loadClaims();
+        }
+    });
+
     async function loadActivity() {
         try {
             activities = await ParfumAPI.request("/admin/actividad?limit=300");
@@ -1099,7 +1135,7 @@
 
     window.addEventListener("hashchange", () => {
         const requested = location.hash.replace("#", "");
-        if (["dashboard","products","decants","orders","users","messages","activity"].includes(requested)) {
+        if (["dashboard","products","decants","orders","users","messages","claims","activity"].includes(requested)) {
             activateTab(requested);
             window.ParfumPWA?.syncPushContext?.();
         }
@@ -1109,9 +1145,10 @@
     resetDecantForm();
     loadDecantContainers().finally(() => resetProduct());
     loadSummary();
+    loadClaims();
 
     const requestedTab = location.hash.replace("#", "");
-    if (["dashboard","products","decants","orders","users","messages","activity"].includes(requestedTab)) {
+    if (["dashboard","products","decants","orders","users","messages","claims","activity"].includes(requestedTab)) {
         activateTab(requestedTab);
     }
 })();

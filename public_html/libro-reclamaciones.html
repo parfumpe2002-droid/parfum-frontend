@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<meta name="theme-color" content="#0c0d0c"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"/>
+<script src="js/theme-init.js"></script>
+<title>Libro de Reclamaciones | Parfum</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+<link href="css/app.css" rel="stylesheet"/>
+<link href="css/layout.css" rel="stylesheet"/>
+<script defer src="js/config.js"></script>
+<script defer src="js/api.js"></script>
+<script defer src="js/store.js"></script>
+<script defer src="js/activity.js"></script>
+<script defer src="js/layout.js"></script>
+<script defer src="js/pwa.js"></script>
+</head>
+<script defer src="js/reclamos.js"></script>
+<body data-page="reclamos">
+<div id="appHeader"></div>
+<section class="page-hero"><div class="page-shell"><p class="eyebrow">Atención al consumidor</p><h1>Libro de Reclamaciones</h1><p>Registra un reclamo o una queja relacionada con tu experiencia en Parfum.</p></div></section>
+<main class="page-shell content-section legal-page">
+<div class="two-col legal-claims-layout">
+<form class="panel legal-card" id="claimsForm">
+<h2>Registrar solicitud</h2>
+<div class="field"><label for="claimType">Tipo</label><select id="claimType" required><option value="RECLAMO">Reclamo — disconformidad con un producto o servicio</option><option value="QUEJA">Queja — disconformidad no relacionada directamente con el producto o servicio</option></select></div>
+<div class="field"><label for="claimName">Nombre completo</label><input id="claimName" maxlength="120" required autocomplete="name"/></div>
+<div class="field"><label for="claimDocument">DNI/CE u otro documento</label><input id="claimDocument" maxlength="20" required autocomplete="off"/></div>
+<div class="field"><label for="claimEmail">Correo</label><input id="claimEmail" maxlength="160" required type="email" autocomplete="email"/></div>
+<div class="field"><label for="claimPhone">Teléfono</label><input id="claimPhone" maxlength="30" required autocomplete="tel"/></div>
+<div class="field"><label for="claimOrder">Pedido relacionado (opcional)</label><input id="claimOrder" maxlength="80" placeholder="Ej. Pedido #123"/></div>
+<div class="field"><label for="claimDetail">Detalle del reclamo o queja</label><textarea id="claimDetail" maxlength="3000" rows="6" required></textarea></div>
+<div class="field"><label for="claimRequest">Pedido del consumidor</label><textarea id="claimRequest" maxlength="1500" rows="4" required placeholder="Indica qué solución solicitas."></textarea></div>
+<label class="legal-check"><input type="checkbox" required/> Declaro que la información ingresada es correcta y autorizo su tratamiento para atender esta solicitud conforme a la Política de Privacidad.</label>
+<button class="primary-btn" type="submit">Registrar</button><p class="form-message" id="claimsMessage"></p>
+</form>
+<aside class="panel legal-card"><h2>Información importante</h2>
+<p>El registro de una queja o reclamo no impide acudir a otras vías de solución de controversias ni limita los derechos del consumidor.</p>
+<p>Parfum utilizará los datos proporcionados únicamente para gestionar el caso, responder y conservar la evidencia necesaria.</p>
+<p><strong>Plazo de atención:</strong> el proveedor debe atender el reclamo o queja dentro del plazo legal aplicable.</p>
+<div class="legal-alert"><strong>Datos empresariales pendientes:</strong> debes completar razón social/titular, RUC y domicilio antes de publicar esta página como Libro de Reclamaciones definitivo.</div>
+<p>Para consultas: <a href="mailto:contacto@parfum.pe">contacto@parfum.pe</a> · +51 963 257 194.</p>
+</aside>
+</div>
+</main><div id="appFooter"></div></body></html>

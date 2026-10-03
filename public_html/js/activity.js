@@ -2,6 +2,16 @@
     "use strict";
 
     const SESSION_KEY = "parfum_visitor_session_v1";
+    const CONSENT_KEY = "parfum_privacy_consent_v1";
+
+    function analyticsAllowed() {
+        try {
+            const consent = JSON.parse(localStorage.getItem(CONSENT_KEY) || "null");
+            return consent?.analytics === true;
+        } catch {
+            return false;
+        }
+    }
 
     function createSessionId() {
         if (window.crypto?.randomUUID) return window.crypto.randomUUID();
@@ -9,6 +19,7 @@
     }
 
     function getSessionId() {
+        if (!analyticsAllowed()) return null;
         let id = localStorage.getItem(SESSION_KEY);
         if (!id) {
             id = createSessionId();
@@ -38,7 +49,7 @@
     }
 
     function track(type, details = {}) {
-        if (!window.ParfumAPI) return Promise.resolve();
+        if (!window.ParfumAPI || !analyticsAllowed()) return Promise.resolve();
         return ParfumAPI.request("/actividad", {
             method: "POST",
             auth: ParfumAPI.isLogged(),
@@ -47,9 +58,14 @@
         }).catch(() => null);
     }
 
-    window.ParfumActivity = Object.freeze({track, getSessionId});
+    window.ParfumActivity = Object.freeze({track, getSessionId, analyticsAllowed});
 
     window.addEventListener("DOMContentLoaded", () => {
-        track("PAGE_VIEW");
+        if (analyticsAllowed()) track("PAGE_VIEW");
     }, {once:true});
+
+    window.addEventListener("parfum:privacy-consent", event => {
+        if (event.detail?.analytics === true) track("PAGE_VIEW");
+        if (event.detail?.analytics === false) localStorage.removeItem(SESSION_KEY);
+    });
 })();

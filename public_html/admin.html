@@ -46,6 +46,7 @@
         <button data-tab="orders"><i class="fa-solid fa-box"></i> Pedidos</button>
         <button data-tab="users"><i class="fa-solid fa-users"></i> Usuarios</button>
         <button data-tab="messages"><i class="fa-solid fa-envelope"></i> Mensajes</button>
+        <button data-tab="claims"><i class="fa-solid fa-book-open"></i> Reclamos</button>
         <button data-tab="activity"><i class="fa-solid fa-eye"></i> Actividad</button>
     </div>
 
@@ -241,6 +242,12 @@
         </div>
         <div class="panel admin-retention-note"><i class="fa-solid fa-circle-info"></i><span>Elimina mensajes que ya no necesites para mantener ligera la base de datos. Los mensajes nuevos no se borran automáticamente.</span></div>
         <div id="messagesTable"></div>
+    </section>
+
+    <section class="admin-view" id="claims">
+        <div class="admin-section-heading"><div><p class="section-kicker">Atención al consumidor</p><h2>Libro de Reclamaciones</h2></div></div>
+        <div class="panel admin-retention-note"><i class="fa-solid fa-scale-balanced"></i><span>Estos registros se mantienen separados de los mensajes comerciales. Atiéndelos y conserva la evidencia de respuesta según corresponda.</span></div>
+        <div id="claimsTable"></div>
     </section>
 
     <section class="admin-view" id="activity">
