@@ -238,7 +238,7 @@
         const logged = ParfumAPI.isLogged();
 
         if (!items.length) return showError(message, "Agrega productos al carrito");
-        if (items.some(item => !/^\d+$/.test(String(item.productoId ?? "")))) {
+        if (items.some(item => !/^\\d+$/.test(String(item.productoId ?? "")))) {
             return showError(message, "El catálogo todavía se está actualizando. Recarga la página antes de finalizar el pedido.");
         }
         if (!deliveryAddress) return showError(message, "Ingresa la dirección de entrega");
@@ -255,20 +255,14 @@
 
         checkoutButton.disabled = true;
         checkoutButton.innerHTML = '<span class="spinner"></span> Registrando pedido…';
-        message.textContent = proof ? "Subiendo comprobante de pago…" : "Creando tu pedido…";
+        message.textContent = "Creando tu pedido de forma segura…";
         message.className = "form-message";
 
+        let order = null;
         try {
-            let uploaded = {url:null, publicId:null};
-            if (proof) {
-                const proofForm = new FormData();
-                proofForm.append("file", proof);
-                uploaded = await ParfumAPI.request("/pedidos/comprobante", {
-                    method:"POST", body:proofForm, auth:logged, timeout:90000
-                });
-            }
-
-            const order = await ParfumAPI.request("/pedidos", {
+            // Primero se crea un pedido válido. Solo después el servidor permite
+            // asociar un comprobante a ese pedido concreto.
+            order = await ParfumAPI.request("/pedidos", {
                 method:"POST",
                 auth:logged,
                 body:{
@@ -282,14 +276,32 @@
                     regaloProductoId:giftSelect.value ? Number(giftSelect.value) : null,
                     metodoPago:paymentSelect.value,
                     numeroOperacion:operationNumber || null,
-                    comprobanteUrl:uploaded.url,
-                    comprobantePublicId:uploaded.publicId,
+                    comprobanteUrl:null,
+                    comprobantePublicId:null,
                     direccionEntrega:deliveryAddress,
                     nombreCliente:logged ? null : document.getElementById("guestName").value.trim(),
                     correoCliente:logged ? null : (document.getElementById("guestEmail").value.trim() || null),
                     telefonoContacto:phoneInput.value.trim()
                 }
             });
+
+            if (proof) {
+                message.textContent = `Pedido #${order.id} creado. Asociando comprobante…`;
+                const proofForm = new FormData();
+                proofForm.append("file", proof);
+                if (operationNumber) proofForm.append("numeroOperacion", operationNumber);
+                const headers = {};
+                if (!logged && order.guestAccessToken) {
+                    headers["X-Parfum-Guest-Token"] = order.guestAccessToken;
+                }
+                order = await ParfumAPI.request(`/pedidos/${order.id}/comprobante`, {
+                    method:"POST",
+                    body:proofForm,
+                    auth:logged,
+                    headers,
+                    timeout:90000
+                });
+            }
 
             message.textContent = proof
                 ? `Pedido #${order.id} registrado. El pago quedó pendiente de verificación.`
@@ -303,9 +315,17 @@
             proofPreview.hidden = true;
             proofPreviewImage.removeAttribute("src");
             proofFileName.textContent = "Seleccionar captura (opcional)";
-            setTimeout(() => location.href = logged ? "pedidos.html" : "index.html", 1400);
+            setTimeout(() => location.href = logged ? "pedidos.html" : "index.html", 1600);
         } catch (error) {
-            showError(message, error.message);
+            if (order?.id) {
+                items = [];
+                render();
+                ParfumStore.updateBadges();
+                message.textContent = `Tu pedido #${order.id} sí fue registrado, pero no pudimos adjuntar el comprobante. Contáctanos indicando ese número para asociarlo.`;
+                message.className = "form-message error";
+            } else {
+                showError(message, error.message);
+            }
         } finally {
             checkoutButton.disabled = false;
             checkoutButton.innerHTML = '<i class="fa-solid fa-lock"></i> Registrar pedido';
