@@ -318,3 +318,15 @@ html[data-theme="dark"] .pagination button,
 html[data-theme="dark"] .admin-tabs button{background:#20211e!important;color:#f2eee6!important;border-color:#44463f!important}
 html[data-theme="dark"] .pagination button.active,
 html[data-theme="dark"] .admin-tabs button.active{background:#ece7dc!important;color:#171816!important}
+
+
+/* Privacidad, cookies y páginas legales */
+.footer-cookie-settings{border:0;background:none;color:#bdb8af;padding:0;text-align:left;font:inherit;cursor:pointer;font-size:inherit}
+.footer-cookie-settings:hover{color:var(--layout-gold)}
+.privacy-consent{position:fixed;z-index:4000;left:50%;bottom:20px;transform:translateX(-50%);width:min(900px,calc(100vw - 30px));background:#fff;color:#1a1a18;border:1px solid #ded6c8;border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.28);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.privacy-consent-copy{display:flex;gap:14px;align-items:flex-start;min-width:0}.privacy-consent-icon{width:44px;height:44px;border-radius:50%;background:#181917;color:var(--layout-gold);display:grid;place-items:center;flex:0 0 auto}
+.privacy-consent-copy>div{display:grid;gap:5px}.privacy-consent-copy b{font-size:14px}.privacy-consent-copy p{margin:0;max-width:620px;font-size:11px;line-height:1.55;color:#666158}.privacy-consent-copy a{font-size:10px;text-decoration:underline;color:#7b5d2c;width:max-content}
+.privacy-consent-actions{display:flex;gap:9px;flex:0 0 auto}.privacy-consent-actions button{white-space:nowrap}
+.legal-page{max-width:1000px}.legal-card{padding:28px}.legal-card h2{font-family:'Cormorant Garamond',serif;font-size:28px;margin:28px 0 10px}.legal-card h2:first-of-type{margin-top:14px}.legal-card p,.legal-card li{line-height:1.75}.legal-card ul{padding-left:22px}.legal-updated{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.legal-alert{border:1px solid #d8bd80;background:#fff7e4;border-radius:10px;padding:14px 16px;margin:16px 0;line-height:1.55}.legal-inline-button{display:inline;border:0;background:none;color:var(--gold-dark);text-decoration:underline;padding:0;cursor:pointer}.legal-claims-layout{align-items:start}.legal-check{display:flex;align-items:flex-start;gap:9px;font-size:11px;line-height:1.5;margin:14px 0}.legal-check input{margin-top:3px}
+html[data-theme="dark"] .privacy-consent{background:#1b1c19;color:#f2eee7;border-color:#45423c}html[data-theme="dark"] .privacy-consent-copy p{color:#c9c4bb}html[data-theme="dark"] .legal-alert{background:#2c2618;color:#f0dfb7;border-color:#68562f}
+@media(max-width:760px){.privacy-consent{align-items:stretch;flex-direction:column;bottom:10px}.privacy-consent-actions{display:grid;grid-template-columns:1fr 1fr}.privacy-consent-actions button{width:100%}.legal-card{padding:20px}}
