@@ -248,10 +248,7 @@
             catalogOnline = true;
             localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(), products:fullCatalog}));
             applyFilters(0);
-            const expected = Number(PARFUM_CONFIG.CATALOG_EXPECTED_COUNT || 86);
-            if (!q.value.trim() && !category.value && !gender.value && data.totalElements < expected) {
-                status.textContent = `Render está terminando de cargar el catálogo (${data.totalElements}/${expected})…`;
-            }
+            // No asumir que 86 productos son obligatorios: el inventario es administrable.
             return {ok:true, totalElements:data.totalElements};
         } catch (error) {
             catalogOnline = false;
@@ -265,9 +262,9 @@
     async function pollCatalog() {
         clearTimeout(catalogPollTimer);
         const result = await loadApi({background: catalogPollAttempt > 0});
-        const expected = Number(PARFUM_CONFIG.CATALOG_EXPECTED_COUNT || 86);
-        const complete = result.ok && result.totalElements >= expected;
-        if (complete || catalogPollAttempt >= Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 14)) return;
+        // Una respuesta exitosa del servidor es el catálogo actual, no un error
+        // por tener menos productos que el número histórico configurado.
+        if (result.ok || catalogPollAttempt >= Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 14)) return;
         catalogPollAttempt += 1;
         catalogPollTimer = setTimeout(pollCatalog, Number(PARFUM_CONFIG.CATALOG_RETRY_MS || 15000));
     }

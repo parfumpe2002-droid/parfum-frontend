@@ -1,0 +1,15 @@
+name: Parfum frontend validation
+on:
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+jobs:
+  javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check all project JavaScript files
+        run: find public_html/js -name '*.js' -print0 | xargs -0 -n1 node --check
