@@ -5,24 +5,47 @@
     const DEFAULT_IMAGE = "imagen/perfumes/perfume-default.png";
 
     function getToken() { return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY); }
+    function readUser(storage) {
+        try {
+            const data = JSON.parse(storage.getItem(USER_KEY) || "null");
+            return data && data.id != null && data.rol ? data : null;
+        } catch { return null; }
+    }
     function getUser() {
-        try { return JSON.parse(localStorage.getItem(USER_KEY) || "null"); }
-        catch { return null; }
-    }
-    function setSession(response) {
-        localStorage.removeItem(TOKEN_KEY);
-        sessionStorage.removeItem(TOKEN_KEY);
-        if (response.usuario?.rol === "ADMIN") {
-            sessionStorage.setItem(TOKEN_KEY, response.token);
-        } else {
-            localStorage.setItem(TOKEN_KEY, response.token);
+        // Un nombre guardado no significa que exista una sesión autenticada.
+        if (!getToken()) {
+            localStorage.removeItem(USER_KEY);
+            sessionStorage.removeItem(USER_KEY);
+            return null;
         }
-        localStorage.setItem(USER_KEY, JSON.stringify(response.usuario));
+        if (sessionStorage.getItem(TOKEN_KEY)) {
+            // Compatibilidad con sesiones admin antiguas que guardaban el perfil en localStorage.
+            return readUser(sessionStorage) || readUser(localStorage);
+        }
+        return readUser(localStorage);
     }
-    function updateUser(user) { localStorage.setItem(USER_KEY, JSON.stringify(user)); }
-    function clearSession() { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY); }
+    function setSession(response, {remember = false} = {}) {
+        if (!response?.token || !response?.usuario?.id) throw new Error("La respuesta de inicio de sesión es inválida");
+        clearSession();
+        const storage = remember ? localStorage : sessionStorage;
+        storage.setItem(TOKEN_KEY, response.token);
+        storage.setItem(USER_KEY, JSON.stringify(response.usuario));
+    }
+    function updateUser(user) {
+        if (!getToken()) return;
+        const storage = sessionStorage.getItem(TOKEN_KEY) ? sessionStorage : localStorage;
+        storage.setItem(USER_KEY, JSON.stringify(user));
+        // Borra los datos antiguos que podían sobrevivir al token admin.
+        (storage === sessionStorage ? localStorage : sessionStorage).removeItem(USER_KEY);
+    }
+    function clearSession() {
+        [localStorage, sessionStorage].forEach(storage => {
+            storage.removeItem(TOKEN_KEY);
+            storage.removeItem(USER_KEY);
+        });
+    }
     function isLogged() { return Boolean(getToken() && getUser()); }
-    function isAdmin() { return getUser()?.rol === "ADMIN"; }
+    function isAdmin() { return isLogged() && getUser()?.rol === "ADMIN"; }
 
     async function request(path, options = {}) {
         const controller = new AbortController();
@@ -33,7 +56,8 @@
             headers.set("Content-Type", "application/json");
         }
         headers.set("Accept", "application/json");
-        if (options.auth !== false && getToken()) headers.set("Authorization", `Bearer ${getToken()}`);
+        const requestToken = options.auth === false ? null : getToken();
+        if (requestToken) headers.set("Authorization", `Bearer ${requestToken}`);
         const body = bodyIsForm || typeof options.body === "string" || options.body === undefined
             ? options.body : JSON.stringify(options.body);
         try {
@@ -42,7 +66,10 @@
             let data = null;
             try { data = text ? JSON.parse(text) : null; } catch { data = text; }
             if (!response.ok) {
-                if (response.status === 401) clearSession();
+                if (response.status === 401 && requestToken && getToken() === requestToken) {
+                    clearSession();
+                    window.dispatchEvent(new CustomEvent("parfum:session-expired"));
+                }
                 if ([502, 503, 504].includes(response.status)) {
                     throw new Error("El servidor de Parfum no está disponible temporalmente. Intenta de nuevo.");
                 }
@@ -222,7 +249,11 @@
     }
 
     function requireAdmin() {
-        if (!isLogged()) { location.href = "login.html"; return false; }
+        if (!isLogged()) {
+            sessionStorage.setItem("parfum_after_login", "admin.html");
+            location.href = "login.html";
+            return false;
+        }
         if (!isAdmin()) { location.href = "index.html"; return false; }
         return true;
     }
