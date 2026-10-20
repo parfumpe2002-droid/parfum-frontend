@@ -16,7 +16,7 @@
 
     const PAGE_SIZE = 16;
     const API_PAGE_SIZE = 100;
-    let fullCatalog = [...PARFUM_FALLBACK_PRODUCTS];
+    let fullCatalog = [];
     let currentProducts = [];
     let currentFilteredProducts = [];
     let currentPage = 0;
@@ -26,7 +26,6 @@
     let catalogPollTimer = null;
     let catalogOnline = false;
     let searchTimer = null;
-    const cacheKey = "parfum_catalog_cache_v10_full";
 
     function normalizeText(value) {
         return String(value ?? "")
@@ -201,20 +200,10 @@
         }
     }
 
-    function readCache() {
-        try {
-            const value = JSON.parse(localStorage.getItem(cacheKey) || "null");
-            const maxAge = Number(PARFUM_CONFIG.CATALOG_CACHE_HOURS || 12) * 3600000;
-            return value?.products?.length && Date.now() - Number(value.savedAt || 0) < maxAge ? value : null;
-        } catch {
-            return null;
-        }
-    }
-
     function uniqueProducts(list) {
         const map = new Map();
         list.forEach(product => {
-            const key = String(product.id ?? product.productoId ?? product.sku ?? product.slug ?? Math.random());
+            const key = String(product.id ?? product.productoId ?? product.sku ?? product.slug ?? "");
             map.set(key, product);
         });
         return [...map.values()];
@@ -243,18 +232,16 @@
         if (!background) status.innerHTML = '<span class="spinner"></span> Actualizando catálogo…';
         try {
             const data = await fetchWholeCatalog();
-            if (!data.products.length) throw new Error("El catálogo llegó vacío");
             fullCatalog = data.products;
             catalogOnline = true;
-            localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(), products:fullCatalog}));
             applyFilters(0);
             // No asumir que 86 productos son obligatorios: el inventario es administrable.
             return {ok:true, totalElements:data.totalElements};
         } catch (error) {
             catalogOnline = false;
-            if (!fullCatalog.length) fullCatalog = [...PARFUM_FALLBACK_PRODUCTS];
+            fullCatalog = [];
             applyFilters(0);
-            status.textContent = "Servidor iniciando. Puedes buscar en la selección disponible mientras Render despierta.";
+            status.innerHTML = 'No se pudo consultar el catálogo real. <button type="button" class="secondary-btn" data-retry-catalog>Reintentar</button>';
             return {ok:false, totalElements:fullCatalog.length, error};
         }
     }
@@ -264,7 +251,7 @@
         const result = await loadApi({background: catalogPollAttempt > 0});
         // Una respuesta exitosa del servidor es el catálogo actual, no un error
         // por tener menos productos que el número histórico configurado.
-        if (result.ok || catalogPollAttempt >= Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 14)) return;
+        if (result.ok || catalogPollAttempt >= Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 3)) return;
         catalogPollAttempt += 1;
         catalogPollTimer = setTimeout(pollCatalog, Number(PARFUM_CONFIG.CATALOG_RETRY_MS || 15000));
     }
@@ -273,26 +260,20 @@
         currentPage = 0; // importante: una búsqueda nueva siempre empieza en la primera página
         updateUrl();
         applyFilters(0);
-        if (!catalogOnline) {
-            catalogPollAttempt = 0;
-            pollCatalog();
-        }
     }
 
     async function start() {
-        fullCatalog = [...PARFUM_FALLBACK_PRODUCTS];
-        await loadFavorites();
-        applyFilters(0);
+        status.innerHTML = '<span class="spinner"></span> Consultando catálogo real…';
+        render([]);
+        pollCatalog();
+        loadFavorites().then(() => applyFilters(currentPage)).catch(() => {});
+    }
 
-        const cached = readCache();
-        if (cached?.products?.length) {
-            fullCatalog = cached.products;
-            applyFilters(0);
-            status.innerHTML = '<span class="spinner"></span> Mostrando catálogo guardado mientras comprobamos novedades…';
-        }
+    status.addEventListener("click", event => {
+        if (!event.target.closest("[data-retry-catalog]")) return;
         catalogPollAttempt = 0;
         pollCatalog();
-    }
+    });
 
     document.getElementById("filterButton").addEventListener("click", applyFilterAction);
 
@@ -319,7 +300,7 @@
         const card = action.closest(".catalog-card");
         const product = currentProducts.find(item => keysFor(item).includes(card.dataset.key))
             || currentFilteredProducts.find(item => keysFor(item).includes(card.dataset.key))
-            || ParfumAPI.fallbackById(card.dataset.key);
+;
         if (!product) return;
 
         try {
