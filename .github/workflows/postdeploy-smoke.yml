@@ -8,13 +8,18 @@ on:
       - "public_html/combos.html"
       - "public_html/index.html"
       - "public_html/js/fallback-products.js"
+      - "public_html/js/api.js"
+      - "public_html/js/auth.js"
+      - "public_html/js/layout.js"
+      - "public_html/login.html"
+      - "public_html/css/layout.css"
   workflow_dispatch:
 jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Confirm live catalog and combos are published
+      - name: Confirm live catalog, combos and session management are published
         run: |
           python3 - <<'PY'
           import time,urllib.request
@@ -24,6 +29,10 @@ jobs:
               "js/productos.js":"No se pudo consultar el catálogo real",
               "js/fallback-products.js":"window.PARFUM_FALLBACK_PRODUCTS = Object.freeze([])",
               "index.html":"Consultando perfumes disponibles…",
+              "js/api.js":"parfum:session-expired",
+              "js/auth.js":"rememberSession",
+              "js/layout.js":"session-expired-dialog",
+              "login.html":"Mantener sesión iniciada",
           }
           for attempt in range(35):
               try:
@@ -35,7 +44,7 @@ jobs:
                           assert r.status==200 and marker in page,(path,r.status)
                           if path=="index.html":
                               assert 'data-fallback="true"' not in page,"old hardcoded products"
-                  print("PARFUM_COMBOS_AND_LIVE_CATALOG_DEPLOYED_OK",flush=True)
+                  print("PARFUM_LIVE_CATALOG_AND_SESSIONS_DEPLOYED_OK",flush=True)
                   break
               except Exception as exc:
                   print("WAIT",attempt+1,str(exc)[:160],flush=True)
