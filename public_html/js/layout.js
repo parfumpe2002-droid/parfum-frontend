@@ -2,6 +2,49 @@
     "use strict";
 
     const user = ParfumAPI.getUser();
+
+    function showExpiredSession() {
+        if (document.getElementById("parfumExpiredSession")) return;
+        const modal = document.createElement("div");
+        modal.className = "session-expired-overlay";
+        modal.id = "parfumExpiredSession";
+        modal.innerHTML = `
+            <section class="session-expired-dialog" role="alertdialog" aria-modal="true"
+                aria-labelledby="sessionExpiredTitle" aria-describedby="sessionExpiredDescription">
+                <span class="session-expired-icon"><i class="fa-solid fa-lock"></i></span>
+                <h2 id="sessionExpiredTitle">Tu sesión ha finalizado</h2>
+                <p id="sessionExpiredDescription">Por seguridad, inicia sesión nuevamente para acceder a tu cuenta y tus pedidos.</p>
+                <div class="session-expired-actions">
+                    <a class="primary-btn" href="login.html" data-session-relogin>Iniciar sesión</a>
+                    <a class="secondary-btn" href="index.html">Volver a la tienda</a>
+                </div>
+            </section>`;
+        document.body.appendChild(modal);
+        modal.querySelector("[data-session-relogin]")?.addEventListener("click", () => {
+            if (!["login", "registro"].includes(document.body.dataset.page)) {
+                sessionStorage.setItem("parfum_after_login", location.pathname + location.search + location.hash);
+            }
+        });
+        modal.querySelector("[data-session-relogin]")?.focus();
+    }
+
+    window.addEventListener("parfum:session-expired", showExpiredSession);
+
+    // El backend tiene la última palabra: una ficha guardada no valida un token vencido.
+    if (user && ParfumAPI.getToken()) {
+        const initialToken = ParfumAPI.getToken();
+        ParfumAPI.request("/auth/me").then(actual => {
+            if (ParfumAPI.getToken() !== initialToken) return;
+            const changedIdentity = String(actual.id) !== String(user.id) || actual.rol !== user.rol;
+            ParfumAPI.updateUser(actual);
+            if (changedIdentity) location.reload();
+        }).catch(error => {
+            if (ParfumAPI.getToken() === initialToken) {
+                console.warn("No se pudo verificar la sesión actual:", error.message);
+            }
+        });
+    }
+
     const activePage = document.body.dataset.page || "";
     const headerRoot = document.getElementById("appHeader");
     const footerRoot = document.getElementById("appFooter");
