@@ -39,11 +39,36 @@
 .combo-detail{margin:40px auto 0;max-width:1140px;display:flex;gap:20px;align-items:center;padding:18px 22px;border:1px solid #b89e7644;border-radius:14px;font-size:14px;line-height:1.6}
 .combo-detail i{color:#b08c59;font-size:22px}.combo-detail p{margin:0}
 @media(max-width:780px){.combo-layout{grid-template-columns:1fr}.combo-stage{min-height:380px}.combo-landing{padding-top:30px}.combo-bottle{transform:scale(.85)}.combo-bottle:nth-child(2){transform:scale(.85)}.combo-bottle:nth-child(3){transform:scale(.85)}.combo-art{gap:0}}
+
+.combo-published{max-width:1160px;margin:auto;padding:0 0 60px}
+.combo-published[hidden],.combo-layout[hidden],.combo-detail[hidden]{display:none!important}
+.combo-published-heading{margin:0 0 25px}
+.combo-published-heading h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(40px,5vw,70px);line-height:1.1;margin:12px 0}
+.combo-published-heading p{color:var(--muted);font-size:14px}
+.combo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.combo-card{border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 30px #0000000c}
+.combo-card-visual{aspect-ratio:1.45;background:linear-gradient(145deg,#f3efe6,#e8ddcf);display:grid;place-items:center;overflow:hidden}
+.combo-card-visual>img{width:100%;height:100%;object-fit:contain}
+.combo-card-collage{width:100%;height:100%;padding:18px;display:flex;align-items:center;justify-content:center;gap:5px}
+.combo-card-collage img{width:30%;height:78%;object-fit:contain;filter:drop-shadow(0 8px 10px #0002)}
+.combo-card-content{display:grid;gap:12px;padding:20px;flex:1}
+.combo-card-content h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;line-height:1.1;margin:0}
+.combo-card-content p{font-size:12px;line-height:1.6;color:var(--muted);margin:0}
+.combo-card-content ul{padding-left:18px;display:grid;gap:5px;font-size:12px;line-height:1.5}
+.combo-card-content strong{font-size:22px}
+.combo-card-content .primary-btn{margin-top:auto;text-decoration:none}
+.combo-card-out{font-size:11px;color:#875328}
+html[data-theme="dark"] .combo-card{background:#191a18;border-color:#49453c}
+html[data-theme="dark"] .combo-card-visual{background:linear-gradient(140deg,#31312c,#211e1b)}
+@media(max-width:1000px){.combo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.combo-grid{grid-template-columns:1fr}.combo-published{padding:0 0 40px}}
+
 </style>
 <script defer src="js/theme-init.js"></script>
 <script defer src="js/config.js"></script>
 <script defer src="js/api.js"></script>
 <script defer src="js/layout.js"></script>
+<script defer src="js/combos.js"></script>
 <script defer src="js/pwa.js"></script>
 </head>
 <body data-page="combos">
@@ -70,6 +95,16 @@
   <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
   <p><strong>Combinaciones pensadas para ti.</strong> Cuando nuestros combos estén listos, mostraremos sus perfumes incluidos, presentaciones, disponibilidad y precio total antes de que puedas comprarlos.</p>
 </section>
+<section class="combo-published" id="combosPublished" hidden>
+  <div class="combo-published-heading">
+    <p class="combo-eyebrow">Selecciones especiales</p>
+    <h1>Descubre nuestros combos</h1>
+    <p>Combinaciones de perfumes seleccionados para cada ocasión, con precio conjunto.</p>
+  </div>
+  <div id="combosGrid" class="combo-grid"></div>
+  <p class="combo-note" style="margin-top:20px"><i class="fa-solid fa-circle-info"></i> Los combos se coordinan por WhatsApp; el precio incluye las presentaciones indicadas, sin envío.</p>
+</section>
+<p id="combosStatus" class="combo-note" role="status" style="max-width:1140px;margin:8px auto 20px"></p>
 </main>
 <div id="appFooter"></div>
 </body>
