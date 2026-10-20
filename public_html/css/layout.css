@@ -349,3 +349,31 @@ html[data-theme="dark"] .remember-session small{color:#b7b1a6}
 html[data-theme="dark"] .session-expired-dialog{background:#1e211c;color:#ede9e1;border-color:#484337}
 html[data-theme="dark"] .session-expired-dialog p{color:#c9c2b7}
 @media(max-width:440px){.session-expired-dialog{padding:24px 18px}.session-expired-actions>*{flex:1 1 100%}}
+
+
+/* Administrador de combos: mantiene el diseño claro/oscuro existente. */
+.admin-combos-layout{display:grid;grid-template-columns:minmax(370px,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.admin-combo-form{min-width:0}
+.admin-combo-list-panel{min-width:0}
+.combo-published-field{align-self:end;padding-bottom:10px}
+.combo-image-preview{width:100%;max-width:250px;max-height:160px;object-fit:contain;border-radius:9px;border:1px solid var(--line);margin-top:8px;background:#f5f1e9}
+.combo-component-rows{display:grid;gap:10px}
+.combo-component-row{display:grid;grid-template-columns:minmax(135px,1.7fr) minmax(82px,.9fr) minmax(150px,1.4fr) 67px 30px;gap:7px;align-items:end;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f8f5ef}
+.combo-component-row .field{min-width:0}
+.combo-component-row .field label{font-size:9px}
+.combo-component-row select,.combo-component-row input{width:100%;min-width:0;padding:9px 7px;font-size:11px}
+.combo-component-row [data-combo-remove]{margin-bottom:4px}
+.admin-combo-list{display:grid;gap:12px}
+.admin-combo-card{display:grid;grid-template-columns:80px minmax(0,1fr);gap:12px;padding:12px;border:1px solid var(--line);border-radius:10px}
+.admin-combo-card>img{width:80px;height:100px;border-radius:8px;object-fit:contain;background:#f6f2e9}
+.admin-combo-info{display:grid;gap:5px;align-content:start;min-width:0}
+.admin-combo-info b{font-size:14px}
+.admin-combo-info p{font-size:11px;color:var(--muted);line-height:1.6;overflow-wrap:anywhere}
+.admin-combo-info small{font-size:10px;color:var(--muted)}
+.admin-combo-info .status-pill{width:fit-content}
+.admin-combo-actions{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end}
+.admin-combo-actions button{font-size:10px;padding:8px 12px}
+html[data-theme="dark"] .combo-component-row,html[data-theme="dark"] .admin-combo-card{background:#23231f;border-color:#494338}
+html[data-theme="dark"] .admin-combo-card>img{background:#1b1c19}
+@media(max-width:1280px){.admin-combos-layout{grid-template-columns:1fr}}
+@media(max-width:700px){.combo-component-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 60px}.combo-component-row .field:first-child{grid-column:1/-1}.combo-component-row .field:nth-child(3){grid-column:1/3}.combo-component-row [data-combo-remove]{grid-column:3;grid-row:1}}
