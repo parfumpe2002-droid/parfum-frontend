@@ -4,7 +4,7 @@ const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const META_CACHE = "parfum-meta";
 const APP_SHELL = [
-  "/", "/index.html", "/productos.html", "/ofertas.html", "/contacto.html",
+  "/", "/index.html", "/productos.html", "/combos.html", "/contacto.html",
   "/login.html", "/registro.html", "/carrito.html", "/pedidos.html", "/offline.html", "/manifest.webmanifest",
   "/css/index.css", "/css/app.css", "/css/layout.css",
   "/js/theme-init.js", "/js/config.js", "/js/api.js", "/js/store.js",
@@ -72,7 +72,7 @@ self.addEventListener("fetch", event => {
     event.respondWith(
       fetch(request).then(response => {
         const clone = response.clone();
-        caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
+        if (response.ok) caches.open(RUNTIME_CACHE).then(cache => cache.put(request, clone));
         return response;
       }).catch(async () => (await caches.match(request)) || caches.match("/offline.html"))
     );
