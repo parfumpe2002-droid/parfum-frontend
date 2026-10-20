@@ -8,7 +8,7 @@ const APP_SHELL = [
   "/login.html", "/registro.html", "/carrito.html", "/pedidos.html", "/offline.html", "/manifest.webmanifest",
   "/css/index.css", "/css/app.css", "/css/layout.css",
   "/js/theme-init.js", "/js/config.js", "/js/api.js", "/js/store.js",
-  "/js/layout.js", "/js/pwa.js", "/js/carrito.js", "/js/pedidos.js", "/js/fallback-products.js",
+  "/js/layout.js", "/js/pwa.js", "/js/carrito.js", "/js/pedidos.js",
   "/icons/icon-192.png", "/icons/icon-512.png", "/imagen/pagos/yape-william-lopez.png",
   "/imagen/decants/decant-3ml.png", "/imagen/decants/decant-5ml.png",
   "/imagen/decants/decant-10ml-premium.png", "/favicon.ico"
