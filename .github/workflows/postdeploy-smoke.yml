@@ -5,31 +5,40 @@ on:
     paths:
       - ".github/workflows/postdeploy-smoke.yml"
       - "public_html/js/productos.js"
+      - "public_html/combos.html"
+      - "public_html/index.html"
+      - "public_html/js/fallback-products.js"
   workflow_dispatch:
 jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Verify static catalog JavaScript is published
+      - name: Confirm live catalog and combos are published
         run: |
           python3 - <<'PY'
           import time,urllib.request
           base="https://parfum-store-app.netlify.app/"
-          marker="if (result.ok || catalogPollAttempt >="
+          paths={
+              "combos.html":"Combos próximamente.",
+              "js/productos.js":"No se pudo consultar el catálogo real",
+              "js/fallback-products.js":"window.PARFUM_FALLBACK_PRODUCTS = Object.freeze([])",
+              "index.html":"Consultando perfumes disponibles…",
+          }
           for attempt in range(35):
               try:
-                  request=urllib.request.Request(base+"js/productos.js",
-                      headers={"User-Agent":"ParfumPostDeploy/1.0","Cache-Control":"no-cache"})
-                  with urllib.request.urlopen(request,timeout=20) as r:
-                      data=r.read().decode("utf-8",errors="replace")
-                      assert r.status==200 and marker in data
-                  with urllib.request.urlopen(base+"productos.html",timeout=20) as r:
-                      assert r.status==200
-                  print("NETLIFY_DEPLOYED_PARFUM_OK",flush=True)
+                  for path, marker in paths.items():
+                      req=urllib.request.Request(base+path,
+                          headers={"User-Agent":"ParfumPostDeploy/2.0","Cache-Control":"no-cache"})
+                      with urllib.request.urlopen(req,timeout=20) as r:
+                          page=r.read().decode("utf-8",errors="replace")
+                          assert r.status==200 and marker in page,(path,r.status)
+                          if path=="index.html":
+                              assert 'data-fallback="true"' not in page,"old hardcoded products"
+                  print("PARFUM_COMBOS_AND_LIVE_CATALOG_DEPLOYED_OK",flush=True)
                   break
-              except Exception as e:
-                  print("WAIT",attempt+1,str(e)[:140],flush=True)
+              except Exception as exc:
+                  print("WAIT",attempt+1,str(exc)[:160],flush=True)
                   time.sleep(10)
-          else:raise SystemExit("Parfum frontend new version not verified")
+          else: raise SystemExit("New Parfum frontend was not verified at Netlify")
           PY
