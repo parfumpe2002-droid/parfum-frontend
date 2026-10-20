@@ -5,8 +5,7 @@
 
     const grid = $("#productGrid");
     const status = $("#catalogStatus");
-    const cacheKey = "parfum_catalog_home_v9";
-    let products = [...PARFUM_FALLBACK_PRODUCTS];
+    let products = [];
     let favoriteKeys = new Set();
     let catalogPollAttempt = 0;
     let catalogPollTimer = null;
@@ -49,7 +48,7 @@
         if (!status) return;
         status.classList.remove("ready", "warning");
         if (type !== "loading") status.classList.add(type);
-        status.innerHTML = `<span class="status-spinner"></span><span>${ParfumAPI.escapeHtml(text)}</span>`;
+        status.innerHTML = `${type === "loading" ? '<span class="status-spinner"></span>' : ""}<span>${ParfumAPI.escapeHtml(text)}</span>${type === "warning" ? ' <button type="button" class="secondary-btn" data-retry-catalog>Reintentar</button>' : ""}`;
     }
 
     function card(product) {
@@ -91,7 +90,7 @@
 
     function render(list) {
         products = list.slice(0, 15);
-        grid.innerHTML = products.map(card).join("");
+        grid.innerHTML = products.length ? products.map(card).join("") : '<div class="empty-state"><i class="fa-solid fa-spray-can-sparkles"></i><h3>Catálogo no disponible por el momento</h3><p>Estamos verificando los perfumes disponibles. Por favor, vuelve a intentar en unos instantes.</p></div>';
         $$("img[data-fallback]", grid).forEach(image => image.addEventListener("error", () => {
             image.src = image.dataset.fallback || "imagen/perfumes/perfume-default.png";
         }, {once:true}));
@@ -105,77 +104,49 @@
         }
     }
 
-    function readCache() {
-        try {
-            const value = JSON.parse(localStorage.getItem(cacheKey) || "null");
-            const maxAge = Number(PARFUM_CONFIG.CATALOG_CACHE_HOURS || 12) * 3600000;
-            return value?.products?.length && Date.now() - Number(value.savedAt || 0) < maxAge ? value : null;
-        } catch {
-            return null;
-        }
-    }
-
-    async function updateCatalog({background = false} = {}) {
-        if (!background) {
-            render(PARFUM_FALLBACK_PRODUCTS);
-            await loadFavorites();
-            render(products);
-
-            const cached = readCache();
-            if (cached?.products?.length) {
-                render(cached.products);
-                setStatus("Mostrando catálogo guardado mientras comprobamos novedades…");
-            } else {
-                setStatus("Actualizando catálogo…");
-            }
-        }
-
+    async function updateCatalog() {
+        setStatus("Consultando perfumes disponibles…");
         try {
             const data = await ParfumAPI.request("/productos?size=15&sort=destacado,desc", {auth:false});
             const list = ParfumAPI.normalizeList(data);
-            const totalElements = Number(data?.totalElements ?? list.length ?? 0);
-            if (!list.length) throw new Error("Catálogo vacío");
+            const total = Number(data?.totalElements ?? list.length);
+            if (!Array.isArray(list)) throw new Error("Respuesta de catálogo inválida");
             render(list);
-            // Render puede tardar en despertar; al recuperar el catálogo volvemos a
-            // cargar los frascos reales de los tres banners desde las imágenes de Admin.
-            hydrateHeroProducts().catch(() => {});
-            localStorage.setItem(cacheKey, JSON.stringify({savedAt:Date.now(), products:list}));
-            const expected = Number(PARFUM_CONFIG.CATALOG_EXPECTED_COUNT || 86);
-            setStatus(totalElements < expected
-                ? `Render está terminando de cargar el catálogo (${totalElements}/${expected})…`
-                : "Catálogo actualizado", totalElements < expected ? "loading" : "ready");
-            return {ok:true, totalElements};
+            // Las imágenes promocionales no deben sustituir el inventario real.
+            if (list.length) hydrateHeroProducts().catch(() => {});
+            setStatus(total
+                ? `Mostrando ${Math.min(list.length,15)} de ${total} perfumes del catálogo`
+                : "Todavía no hay perfumes publicados.", "ready");
+            catalogPollAttempt = 0;
+            return true;
         } catch (error) {
-            if (!background) {
-                const cached = readCache();
-                setStatus(
-                    cached?.products?.length
-                        ? "No se pudo actualizar todavía. Reintentando mientras Render inicia…"
-                        : "Servidor iniciando. Mostrando la selección local de respaldo.",
-                    "warning"
-                );
-            }
-            return {ok:false, totalElements:0, error};
+            products = [];
+            render([]);
+            setStatus("No se pudo consultar el catálogo. Intenta nuevamente para ver los productos reales.", "warning");
+            return false;
         }
     }
 
     async function pollCatalog() {
         clearTimeout(catalogPollTimer);
-        const result = await updateCatalog({background: catalogPollAttempt > 0});
-        const expected = Number(PARFUM_CONFIG.CATALOG_EXPECTED_COUNT || 86);
-        if ((result.ok && result.totalElements >= expected)
-                || catalogPollAttempt >= Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 14)) return;
-        catalogPollAttempt += 1;
+        const loaded = await updateCatalog();
+        if (loaded || catalogPollAttempt >= Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 3)) return;
+        catalogPollAttempt++;
         catalogPollTimer = setTimeout(pollCatalog, Number(PARFUM_CONFIG.CATALOG_RETRY_MS || 15000));
     }
+
+    document.addEventListener("click", event => {
+        if (!event.target.closest("[data-retry-catalog]")) return;
+        catalogPollAttempt = 0;
+        pollCatalog();
+    });
 
     grid?.addEventListener("click", async event => {
         const action = event.target.closest("[data-action]");
         if (!action) return;
         event.preventDefault();
         const cardElement = action.closest(".product-card");
-        const product = products.find(item => keysFor(item).includes(cardElement.dataset.key))
-            || ParfumAPI.fallbackById(cardElement.dataset.key);
+        const product = products.find(item => keysFor(item).includes(cardElement.dataset.key));
         if (!product) return;
 
         try {
@@ -198,6 +169,5 @@
     });
 
     ParfumStore.updateBadges();
-    hydrateHeroProducts().catch(() => {});
     pollCatalog();
 })();

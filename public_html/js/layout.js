@@ -5,10 +5,10 @@
     const activePage = document.body.dataset.page || "";
     const headerRoot = document.getElementById("appHeader");
     const footerRoot = document.getElementById("appFooter");
-    const isOffers = activePage === "ofertas" || new URLSearchParams(location.search).get("ofertas") === "1";
+    const isOffers = activePage === "combos";
 
     const navLink = (href, label, key, icon) => {
-        const active = key === "ofertas" ? isOffers : activePage === key && !isOffers;
+        const active = key === "combos" ? isOffers : activePage === key && !isOffers;
         return `<a class="${active ? "active" : ""}" href="${href}"><i class="${icon}" aria-hidden="true"></i><span>${label}</span></a>`;
     };
 
@@ -54,7 +54,7 @@
                     <div class="main-nav-links">
                         ${navLink("index.html", "Inicio", "inicio", "fa-solid fa-house")}
                         ${navLink("productos.html", "Perfumes", "productos", "fa-solid fa-spray-can-sparkles")}
-                        ${navLink("ofertas.html", "Ofertas", "ofertas", "fa-solid fa-tags")}
+                        ${navLink("combos.html", "Combos", "combos", "fa-solid fa-boxes-stacked")}
                         ${navLink("contacto.html", "Contacto", "contacto", "fa-solid fa-envelope")}
                     </div>
                     <div class="mobile-nav-tools">
@@ -105,7 +105,7 @@
                         <button class="footer-install" type="button" data-install-app hidden><i class="fa-solid fa-download"></i> Instalar aplicación</button>
                     </div>
                     <div><h3>Información</h3><a href="index.html">Inicio</a><a href="contacto.html">Contacto</a><a href="pedidos.html">Seguimiento de pedido</a><a href="privacidad.html">Privacidad</a><a href="cookies.html">Cookies</a><a href="terminos.html">Términos y condiciones</a><a href="libro-reclamaciones.html">Libro de Reclamaciones</a><button class="footer-cookie-settings" type="button" data-cookie-settings>Configurar cookies</button></div>
-                    <div><h3>Comprar</h3><a href="productos.html">Perfumes</a><a href="ofertas.html">Ofertas</a><a href="favoritos.html">Favoritos</a><a href="carrito.html">Carrito</a></div>
+                    <div><h3>Comprar</h3><a href="productos.html">Perfumes</a><a href="combos.html">Combos</a><a href="favoritos.html">Favoritos</a><a href="carrito.html">Carrito</a></div>
                     <div><h3>Mi cuenta</h3><a href="perfil.html">Perfil</a><a href="pedidos.html">Mis pedidos</a><a href="login.html">Iniciar sesión</a></div>
                     <div class="newsletter"><h3>Síguenos</h3><div class="socials"><a href="https://www.instagram.com/parfum_pe_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @parfum_pe_"><i class="fa-brands fa-instagram"></i></a><a href="https://www.tiktok.com/@Parfum_pe" target="_blank" rel="noopener noreferrer" aria-label="TikTok @Parfum_pe"><i class="fa-brands fa-tiktok"></i></a><a href="https://www.tiktok.com/@Parfum_pe2" target="_blank" rel="noopener noreferrer" aria-label="TikTok @Parfum_pe2"><i class="fa-brands fa-tiktok"></i></a></div><p>Instagram @parfum_pe_ · TikTok @Parfum_pe / @Parfum_pe2</p><form id="newsletterForm"><label class="sr-only" for="newsletterEmail">Correo electrónico</label><input id="newsletterEmail" type="email" placeholder="Tu correo electrónico"><button type="submit" aria-label="Suscribirme"><i class="fa-solid fa-arrow-right"></i></button></form></div>
                 </div>

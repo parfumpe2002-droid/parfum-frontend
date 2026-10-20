@@ -57,3 +57,10 @@
   for = "/registro.html"
   [headers.values]
     Cache-Control = "no-store"
+
+# Enlaces antiguos de ofertas siguen funcionando.
+[[redirects]]
+  from = "/ofertas.html"
+  to = "/combos.html"
+  status = 301
+  force = true
