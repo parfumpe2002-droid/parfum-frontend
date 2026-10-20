@@ -299,8 +299,7 @@
         event.preventDefault();
         const card = action.closest(".catalog-card");
         const product = currentProducts.find(item => keysFor(item).includes(card.dataset.key))
-            || currentFilteredProducts.find(item => keysFor(item).includes(card.dataset.key))
-;
+            || currentFilteredProducts.find(item => keysFor(item).includes(card.dataset.key));
         if (!product) return;
 
         try {
