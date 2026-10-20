@@ -385,14 +385,16 @@
             message.className = "form-message ok";
             window.ParfumActivity?.track("ORDER", {detalle:`Pedido #${order.id} · ${ParfumAPI.money(order.total)}`});
             items = [];
-            await ParfumStore.clearCart();
+            try { await ParfumStore.clearCart(); }
+            catch (clearError) { console.warn("No se pudo limpiar el carrito después del pedido:", clearError); }
             render();
             ParfumStore.updateBadges();
             checkoutForm.reset();
             proofPreview.hidden = true;
             proofPreviewImage.removeAttribute("src");
             proofFileName.textContent = "Seleccionar captura (opcional)";
-            setTimeout(() => location.href = logged ? "pedidos.html" : "index.html", 1600);
+            if (logged) setTimeout(() => location.href = "pedidos.html", 1800);
+            // El invitado necesita conservar a la vista el número de pedido para coordinar el pago.
         } catch (error) {
             if (order?.id) {
                 items = [];
