@@ -13,3 +13,5 @@ jobs:
           node-version: "22"
       - name: Check all project JavaScript files
         run: find public_html/js -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Test session handling and remember-me
+        run: node --test tests/*.test.cjs
