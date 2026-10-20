@@ -4,9 +4,12 @@
     // Despierta Render apenas se abre login/registro para reducir el primer intento fallido.
     ParfumAPI.wakeServer?.();
 
+    // No confiar únicamente en el perfil guardado: verificar el token antes de redirigir.
     if (ParfumAPI.isLogged()) {
-        location.href = ParfumAPI.isAdmin() ? "admin.html" : "perfil.html";
-        return;
+        ParfumAPI.request("/auth/me").then(user => {
+            ParfumAPI.updateUser(user);
+            location.replace(user.rol === "ADMIN" ? "admin.html" : "perfil.html");
+        }).catch(error => console.warn("La sesión anterior no pudo verificarse:", error.message));
     }
 
     const show = (id, message, type = "error") => {
@@ -47,9 +50,14 @@
                     password:document.getElementById("password").value
                 }
             }, "formMessage");
-            ParfumAPI.setSession(response);
-            await window.ParfumActivity?.track("LOGIN", {detalle:`Inicio de sesión: ${response.usuario.email}`});
-            await ParfumStore.syncGuest();
+            const remember = document.getElementById("rememberSession")?.checked === true;
+            ParfumAPI.setSession(response, {remember});
+            // La sincronización del carrito es secundaria: no debe simular un fallo del login.
+            try { await ParfumStore.syncGuest(); }
+            catch (error) { console.warn("El carrito se sincronizará luego:", error); }
+            if (!ParfumAPI.isLogged()) throw new Error("No se pudo validar la sesión. Vuelve a ingresar.");
+            Promise.resolve(window.ParfumActivity?.track("LOGIN", {detalle:`Inicio de sesión: ${response.usuario.email}`}))
+                .catch(error => console.warn("No se pudo registrar la actividad:", error));
             show("formMessage", "Sesión iniciada", "ok");
             const next = sessionStorage.getItem("parfum_after_login");
             sessionStorage.removeItem("parfum_after_login");
@@ -81,9 +89,12 @@
                     password:document.getElementById("password").value
                 }
             }, "formMessage");
-            ParfumAPI.setSession(response);
-            await window.ParfumActivity?.track("REGISTER", {detalle:`Registro: ${response.usuario.email}`});
-            await ParfumStore.syncGuest();
+            ParfumAPI.setSession(response, {remember:true});
+            try { await ParfumStore.syncGuest(); }
+            catch (error) { console.warn("El carrito se sincronizará luego:", error); }
+            if (!ParfumAPI.isLogged()) throw new Error("No se pudo validar la sesión nueva.");
+            Promise.resolve(window.ParfumActivity?.track("REGISTER", {detalle:`Registro: ${response.usuario.email}`}))
+                .catch(error => console.warn("No se pudo registrar la actividad:", error));
             show("formMessage", "Cuenta creada", "ok");
             location.href = "index.html";
         } catch (error) {
