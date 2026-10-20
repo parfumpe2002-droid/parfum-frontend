@@ -20,7 +20,7 @@ jobs:
           import time,urllib.request
           base="https://parfum-store-app.netlify.app/"
           paths={
-              "combos.html":"Combos próximamente.",
+              "combos.html":"Combos próximamente",
               "js/productos.js":"No se pudo consultar el catálogo real",
               "js/fallback-products.js":"window.PARFUM_FALLBACK_PRODUCTS = Object.freeze([])",
               "index.html":"Consultando perfumes disponibles…",
