@@ -146,8 +146,7 @@
         if (!action) return;
         event.preventDefault();
         const cardElement = action.closest(".product-card");
-        const product = products.find(item => keysFor(item).includes(cardElement.dataset.key))
-;
+        const product = products.find(item => keysFor(item).includes(cardElement.dataset.key));
         if (!product) return;
 
         try {
