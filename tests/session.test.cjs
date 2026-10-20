@@ -19,7 +19,7 @@ function harness({local = {}, session = {}, fetchImpl = async () => ({ok:true, s
     const events = [];
     const window = {dispatchEvent:event => events.push(event.type)};
     const context = {
-        window, localStorage, sessionStorage, fetch:fetchImpl, Headers, AbortController,
+        window, localStorage, sessionStorage, fetch:fetchImpl, Headers, FormData, AbortController,
         setTimeout, clearTimeout, CustomEvent:class {constructor(type) {this.type = type;}},
         location:{href:"", pathname:"/admin.html"},
         PARFUM_CONFIG:{API_BASE:"https://api.example.test", API_TIMEOUT_MS:5000}
