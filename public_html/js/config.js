@@ -12,9 +12,7 @@
     window.PARFUM_CONFIG = Object.freeze({
         API_BASE: String(configuredApi).replace(/\/+$/, ""),
         API_TIMEOUT_MS: 90000,
-        CATALOG_CACHE_HOURS: 6,
-        CATALOG_EXPECTED_COUNT: 86,
         CATALOG_RETRY_MS: 15000,
-        CATALOG_RETRY_ATTEMPTS: 14
+        CATALOG_RETRY_ATTEMPTS: 3
     });
 })();
