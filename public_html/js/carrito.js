@@ -229,7 +229,7 @@
         proofFileName.textContent = "Seleccionar captura (opcional)";
     });
 
-    const positiveId = value => /^\\d+$/.test(String(value ?? "")) && Number(value) > 0;
+    const positiveId = value => /^\d+$/.test(String(value ?? "")) && Number(value) > 0;
     const itemType = item => String(item.tipoItem || "BOTELLA").toUpperCase() === "DECANT" ? "DECANT" : "BOTELLA";
 
     function exactVariant(product, item) {
