@@ -51,7 +51,7 @@
           '<div class="field"><label>Tipo</label><select data-combo-type>'+
           '<option value="DECANT"'+(type === "DECANT" ? ' selected' : '')+'>Decant</option>'+
           '<option value="BOTELLA"'+(type === "BOTELLA" ? ' selected' : '')+'>Frasco</option></select></div>'+
-          '<div class="field"><label>Presentación</label><select data-combo-variant required>'+items+'</select></div>'+
+          '<div class="field"><label>Presentación</label><select data-combo-variant'+(available.length === 1 && (available[0].id == null || available[0].id === "") ? "" : " required")+'>'+items+'</select></div>'+
           '<div class="field"><label>Cant.</label><input type="number" min="1" max="20" data-combo-qty value="'+esc(item.cantidad || 1)+'" required/></div>'+
           '<button type="button" data-combo-remove class="icon-button danger-text" aria-label="Quitar perfume"><i class="fa-solid fa-xmark"></i></button>'+
           '</div>';
@@ -67,7 +67,7 @@
         $("comboImage").value = "";
         $("comboImagePreview").hidden = true;
         $("comboImagePreview").removeAttribute("src");
-        renderRows([{},{ }]);
+        renderRows([{},{}]);
         notify("");
     }
     function edit(combo) {
@@ -154,7 +154,8 @@
         const preview = $("comboImagePreview");
         preview.src = URL.createObjectURL(file);
         preview.hidden = false;
-        preview.onload = () => URL.revokeObjectURL(preview.src);
+        const blobUrl = preview.src;
+        preview.onload = () => URL.revokeObjectURL(blobUrl);
     });
     form.addEventListener("submit",async event => {
         event.preventDefault();
