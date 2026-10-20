@@ -44,15 +44,15 @@
             if (!response.ok) {
                 if (response.status === 401) clearSession();
                 if ([502, 503, 504].includes(response.status)) {
-                    throw new Error("Render está iniciando. La API todavía no está lista.");
+                    throw new Error("El servidor de Parfum no está disponible temporalmente. Intenta de nuevo.");
                 }
                 throw new Error(data?.message || `Error HTTP ${response.status}`);
             }
             return data;
         } catch (error) {
-            if (error.name === "AbortError") throw new Error("Render está tardando en despertar. Espera unos segundos y vuelve a intentar.");
+            if (error.name === "AbortError") throw new Error("El servidor tardó demasiado en responder. Comprueba tu conexión y vuelve a intentar.");
             if (error instanceof TypeError || /failed to fetch/i.test(String(error?.message || ""))) {
-                throw new Error("No se pudo conectar con el servidor. Si Render estaba dormido, espera 30–60 segundos y vuelve a intentar.");
+                throw new Error("No se pudo conectar con el servidor de Parfum. Verifica tu conexión e intenta nuevamente.");
             }
             throw error;
         } finally {
