@@ -90,6 +90,14 @@
         return parse(CART);
     }
 
+    // Persistimos el carrito invitado una vez validados los ID y precios con la API.
+    function saveGuestCart(list) {
+        if (ParfumAPI.isLogged()) return;
+        save(CART, list);
+        setBadgeCounts(list.reduce((total, item) => total + Number(item.cantidad || 0), 0),
+            currentBadgeValue("[data-fav-count]"));
+    }
+
     async function addCart(product, quantity = 1, requestedVariant = null, requestedType = null) {
         let selection = normalizeSelection(product, requestedVariant, requestedType);
         if (!ParfumAPI.canBuy(product, selection.variant, selection.type)) {
@@ -335,7 +343,7 @@
     }
 
     window.ParfumStore = {
-        cart, addCart, updateCart, removeCart, clearCart,
+        cart, addCart, updateCart, removeCart, clearCart, saveGuestCart,
         favorites, isFavorite, toggleFavorite, syncGuest, updateBadges,
         productKeyOf, cartKeyOf, normalizeSelection
     };
