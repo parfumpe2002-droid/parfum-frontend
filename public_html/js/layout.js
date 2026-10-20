@@ -4,6 +4,7 @@
     const user = ParfumAPI.getUser();
 
     function showExpiredSession() {
+        if (["login", "registro"].includes(document.body.dataset.page)) return;
         if (document.getElementById("parfumExpiredSession")) return;
         const modal = document.createElement("div");
         modal.className = "session-expired-overlay";
@@ -31,7 +32,7 @@
     window.addEventListener("parfum:session-expired", showExpiredSession);
 
     // El backend tiene la última palabra: una ficha guardada no valida un token vencido.
-    if (user && ParfumAPI.getToken()) {
+    if (user && ParfumAPI.getToken() && !["login", "registro"].includes(document.body.dataset.page)) {
         const initialToken = ParfumAPI.getToken();
         ParfumAPI.request("/auth/me").then(actual => {
             if (ParfumAPI.getToken() !== initialToken) return;
