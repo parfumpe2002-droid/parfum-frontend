@@ -126,6 +126,7 @@
         });
         if (name === "products") Promise.all([loadDecantContainers(), loadProducts()]);
         if (name === "decants") loadDecantContainers(true);
+        if (name === "combos") document.dispatchEvent(new CustomEvent("parfum:load-combos"));
         if (name === "orders") loadOrders();
         if (name === "users") loadUsers();
         if (name === "messages") loadMessages();
@@ -1135,7 +1136,7 @@
 
     window.addEventListener("hashchange", () => {
         const requested = location.hash.replace("#", "");
-        if (["dashboard","products","decants","orders","users","messages","claims","activity"].includes(requested)) {
+        if (["dashboard","products","decants","combos","orders","users","messages","claims","activity"].includes(requested)) {
             activateTab(requested);
             window.ParfumPWA?.syncPushContext?.();
         }
@@ -1148,7 +1149,7 @@
     loadClaims();
 
     const requestedTab = location.hash.replace("#", "");
-    if (["dashboard","products","decants","orders","users","messages","claims","activity"].includes(requestedTab)) {
+    if (["dashboard","products","decants","combos","orders","users","messages","claims","activity"].includes(requestedTab)) {
         activateTab(requestedTab);
     }
 })();

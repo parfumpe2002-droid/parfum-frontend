@@ -26,6 +26,7 @@
 <script defer src="js/activity.js"></script>
 <script defer src="js/layout.js"></script>
 <script defer src="js/admin.js"></script>
+<script defer src="js/admin-combos.js"></script>
 <script defer src="js/pwa.js"></script>
 </head>
 <body data-page="admin">
@@ -43,6 +44,7 @@
         <button class="active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Resumen</button>
         <button data-tab="products"><i class="fa-solid fa-spray-can-sparkles"></i> Productos</button>
         <button data-tab="decants"><i class="fa-solid fa-vial"></i> Decants</button>
+        <button data-tab="combos"><i class="fa-solid fa-boxes-stacked"></i> Combos</button>
         <button data-tab="orders"><i class="fa-solid fa-box"></i> Pedidos</button>
         <button data-tab="users"><i class="fa-solid fa-users"></i> Usuarios</button>
         <button data-tab="messages"><i class="fa-solid fa-envelope"></i> Mensajes</button>
@@ -219,6 +221,43 @@
                 <div class="admin-panel-heading"><div><p class="section-kicker">Presentaciones</p><h2>Envases disponibles</h2></div><span class="admin-count" id="decantCount">0 envases</span></div>
                 <div id="decantContainersList" class="admin-decant-cards"></div>
             </section>
+        </div>
+    </section>
+
+    <section class="admin-view" id="combos">
+        <div class="panel catalog-note">
+            <strong>Combos de perfumes:</strong> crea combinaciones usando productos y presentaciones del catálogo real. 
+            Guarda en borrador y publica cuando tengan precio, fotografía y disponibilidad.
+            La venta se coordina por WhatsApp hasta que se habilite el pago de combos desde el carrito.
+        </div>
+        <div class="admin-products-layout admin-combos-layout">
+            <form class="panel admin-combo-form" id="comboForm">
+                <div class="admin-panel-heading">
+                    <div><p class="section-kicker">Nueva combinación</p><h2 id="comboFormTitle">Nuevo combo</h2></div>
+                    <button type="button" id="comboReset" class="icon-button" aria-label="Limpiar formulario"><i class="fa-solid fa-rotate-left"></i></button>
+                </div>
+                <input type="hidden" id="comboId"/>
+                <div class="form-grid compact-form-grid">
+                    <div class="field full"><label for="comboName">Nombre</label><input id="comboName" maxlength="120" placeholder="Combo Verano" required/></div>
+                    <div class="field full"><label for="comboDescription">Descripción</label><textarea id="comboDescription" maxlength="1200" rows="3" placeholder="Una selección fresca para los días soleados"></textarea></div>
+                    <div class="field"><label for="comboPrice">Precio total del combo (S/)</label><input id="comboPrice" type="number" min="0.01" step="0.01" required placeholder="30.00"/></div>
+                    <label class="admin-check combo-published-field"><input type="checkbox" id="comboPublished"/> Publicar en la tienda</label>
+                    <div class="field full"><label for="comboImage">Imagen de la combinación (opcional)</label><input type="file" id="comboImage" accept="image/jpeg,image/png,image/webp"/><small>Sube una foto con todos los perfumes, o se usarán las imágenes de los productos.</small><img id="comboImagePreview" class="combo-image-preview" alt="Imagen del combo" hidden/></div>
+                    <div class="field full combo-components-field">
+                        <div class="presentation-admin-heading">
+                            <div><label>Perfumes que incluye</label><small>Selecciona el perfume, su tamaño y la cantidad. Mínimo 2 componentes.</small></div>
+                            <button type="button" class="secondary-btn" id="comboAddItem"><i class="fa-solid fa-plus"></i> Añadir perfume</button>
+                        </div>
+                        <div id="comboComponentRows" class="combo-component-rows"></div>
+                    </div>
+                </div>
+                <button type="submit" class="primary-btn"><i class="fa-solid fa-floppy-disk"></i> Guardar combo</button>
+                <p class="form-message" id="comboMessage" role="status"></p>
+            </form>
+            <div class="panel admin-combo-list-panel">
+                <div class="admin-panel-heading"><div><p class="section-kicker">Combos creados</p><h2>Mis combos</h2></div><span class="admin-count" id="comboCount">0 combos</span></div>
+                <div id="comboList" class="admin-combo-list"></div>
+            </div>
         </div>
     </section>
 
