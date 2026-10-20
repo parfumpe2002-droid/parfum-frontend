@@ -229,6 +229,76 @@
         proofFileName.textContent = "Seleccionar captura (opcional)";
     });
 
+    const positiveId = value => /^\\d+$/.test(String(value ?? "")) && Number(value) > 0;
+    const itemType = item => String(item.tipoItem || "BOTELLA").toUpperCase() === "DECANT" ? "DECANT" : "BOTELLA";
+
+    function exactVariant(product, item) {
+        const type = itemType(item);
+        const list = type === "DECANT" ? ParfumAPI.activeDecants(product) : ParfumAPI.activePresentations(product);
+        const id = type === "DECANT" ? item.productoDecantId : item.presentacionId;
+        if (id != null && positiveId(id)) {
+            return list.find(variant => String(variant.id) === String(id)) || null;
+        }
+        // Los productos precargados usan IDs de variantes temporales.
+        // Nunca cambiamos silenciosamente la cantidad en ml ni el envase elegido.
+        const byMl = list.filter(variant => Number(variant.mililitros) === Number(item.mililitros));
+        const selected = type === "DECANT" && item.envaseId != null
+            ? byMl.filter(variant => String(variant.envaseId) === String(item.envaseId))
+            : byMl;
+        return selected.length === 1 ? selected[0] : null;
+    }
+
+    async function verifyCheckoutItems() {
+        const verified = [];
+        let changed = false;
+        for (const item of items) {
+            const type = itemType(item);
+            let product;
+            try {
+                if (positiveId(item.productoId)) {
+                    product = await ParfumAPI.request(`/productos/${Number(item.productoId)}`, {auth:false});
+                } else if (item.sku) {
+                    product = await ParfumAPI.request(`/productos/sku/${encodeURIComponent(item.sku)}`, {auth:false});
+                } else if (item.slug) {
+                    product = await ParfumAPI.request(`/productos/slug/${encodeURIComponent(item.slug)}`, {auth:false});
+                } else {
+                    throw new Error("Sin identificador de catálogo");
+                }
+            } catch (error) {
+                throw new Error(`No pudimos verificar "${item.nombre}". Comprueba tu conexión e inténtalo de nuevo. (${error.message})`);
+            }
+            if (!positiveId(product?.id)) throw new Error(`"${item.nombre}" no está disponible para comprar.`);
+            const available = type === "DECANT" ? ParfumAPI.activeDecants(product) : ParfumAPI.activePresentations(product);
+            const variant = available.length ? exactVariant(product, item) : null;
+            if ((available.length || type === "DECANT") && (!variant || !positiveId(variant.id))) {
+                throw new Error(`La presentación de "${item.nombre}" cambió. Elimínala del carrito y vuelve a seleccionar el tamaño.`);
+            }
+            const quantity = Number(item.cantidad);
+            const price = Number(variant?.precio ?? product.precio);
+            const stock = Number(variant?.stock ?? product.stock);
+            if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20 || !Number.isFinite(price) || price <= 0 || stock < quantity) {
+                throw new Error(`"${item.nombre}" no tiene precio o stock suficiente para la cantidad elegida.`);
+            }
+            const resolved = {
+                ...item, productoId:Number(product.id), sku:product.sku, slug:product.slug,
+                presentacionId:type === "BOTELLA" ? (variant ? Number(variant.id) : null) : null,
+                productoDecantId:type === "DECANT" ? Number(variant.id) : null,
+                envaseId:type === "DECANT" ? variant.envaseId : null,
+                mililitros:variant?.mililitros ?? null,
+                presentacion:variant?.etiqueta || item.presentacion,
+                nombre:product.nombre, marca:product.marca,
+                precio:price, stock, tipoItem:type
+            };
+            if (Math.abs(Number(item.precio) - price) > 0.005 || String(item.productoId) !== String(product.id)
+                || String(type === "DECANT" ? item.productoDecantId : item.presentacionId) !== String(variant?.id ?? null)) changed = true;
+            verified.push(resolved);
+        }
+        items = verified;
+        if (!ParfumAPI.isLogged()) ParfumStore.saveGuestCart(items);
+        render();
+        if (changed) throw new Error("Actualizamos las presentaciones y precios según el catálogo real. Revisa el total y pulsa Registrar pedido nuevamente.");
+    }
+
     checkoutForm.addEventListener("submit", async event => {
         event.preventDefault();
         const message = document.getElementById("checkoutMessage");
@@ -238,9 +308,6 @@
         const logged = ParfumAPI.isLogged();
 
         if (!items.length) return showError(message, "Agrega productos al carrito");
-        if (items.some(item => !/^\\d+$/.test(String(item.productoId ?? "")))) {
-            return showError(message, "El catálogo todavía se está actualizando. Recarga la página antes de finalizar el pedido.");
-        }
         if (!deliveryAddress) return showError(message, "Ingresa la dirección de entrega");
         if (!phoneInput.value.trim()) {
             showError(message, "Ingresa un número de celular para coordinar el pedido");
@@ -254,6 +321,15 @@
         }
 
         checkoutButton.disabled = true;
+        checkoutButton.innerHTML = '<span class="spinner"></span> Verificando productos…';
+        try {
+            await verifyCheckoutItems();
+        } catch (error) {
+            showError(message, error.message);
+            checkoutButton.disabled = false;
+            checkoutButton.innerHTML = '<i class="fa-solid fa-lock"></i> Registrar pedido';
+            return;
+        }
         checkoutButton.innerHTML = '<span class="spinner"></span> Registrando pedido…';
         message.textContent = "Creando tu pedido de forma segura…";
         message.className = "form-message";
@@ -309,6 +385,7 @@
             message.className = "form-message ok";
             window.ParfumActivity?.track("ORDER", {detalle:`Pedido #${order.id} · ${ParfumAPI.money(order.total)}`});
             items = [];
+            await ParfumStore.clearCart();
             render();
             ParfumStore.updateBadges();
             checkoutForm.reset();
@@ -319,6 +396,7 @@
         } catch (error) {
             if (order?.id) {
                 items = [];
+                try { await ParfumStore.clearCart(); } catch (clearError) { console.warn("Carrito no vaciado:", clearError); }
                 render();
                 ParfumStore.updateBadges();
                 message.textContent = `Tu pedido #${order.id} sí fue registrado, pero no pudimos adjuntar el comprobante. Contáctanos indicando ese número para asociarlo.`;
