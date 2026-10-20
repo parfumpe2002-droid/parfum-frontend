@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c0d0c">
+<meta name="description" content="Muy pronto llegarán los combos de perfumes Parfum. Selecciones especiales para cada ocasión.">
+<title>Combos próximamente | Parfum</title>
+<link rel="canonical" href="https://parfum.com.pe/combos.html">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="css/app.css" rel="stylesheet">
+<link href="css/layout.css" rel="stylesheet">
+<style>
+.combo-landing{padding:clamp(32px,6vw,90px) 0 100px}
+.combo-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(25px,6vw,100px);align-items:center;max-width:1140px;margin:auto}
+.combo-eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;font-weight:700;color:#ad8c54}
+.combo-copy h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(48px,6vw,86px);line-height:1.02;letter-spacing:-.02em;margin:18px 0 24px}
+.combo-copy h1 em{font-weight:500;color:#b08c59}
+.combo-copy>p:not(.combo-eyebrow){font-size:16px;line-height:1.8;opacity:.78;max-width:540px}
+.combo-actions{display:flex;flex-wrap:wrap;gap:14px;margin:30px 0}
+.combo-note{display:flex;gap:10px;align-items:center;font-size:13px;opacity:.75;line-height:1.5}
+.combo-stage{min-height:490px;position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;border-radius:24px;background:linear-gradient(140deg,#23231e,#11130f);border:1px solid #4a493d;box-shadow:0 24px 75px #0003}
+.combo-stage:before{content:"";position:absolute;inset:12% -32%;z-index:-1;border:1px solid #c5ad803d;border-radius:50%;transform:rotate(-26deg);box-shadow:0 0 0 45px #c5ad8009,0 0 0 95px #c5ad8006}
+.combo-art{display:flex;align-items:end;gap:18px;min-height:260px;filter:drop-shadow(12px 22px 17px #0008)}
+.combo-bottle{position:relative;width:92px;height:200px;border-radius:19px 19px 20px 20px;border:2px solid #d2b9898a;background:linear-gradient(110deg,#b18b5d63,#e3cc9d60 38%,#82633f7a 73%,#c39f6480)}
+.combo-bottle:before{content:"";position:absolute;bottom:100%;left:31px;width:27px;height:25px;background:linear-gradient(90deg,#917f65,#cbb487,#877358);border-radius:3px 3px 0 0}
+.combo-bottle:after{content:"PARFUM";position:absolute;left:12px;right:12px;top:78px;border-top:1px solid #efd7a8;border-bottom:1px solid #efd7a8;padding:14px 0;color:#fff4db;text-align:center;letter-spacing:.16em;font-size:10px;font-weight:600}
+.combo-bottle:nth-child(2){height:250px;width:112px;border-radius:14px;background:linear-gradient(110deg,#384b5bbd,#8a9cacf0 38%,#293d50c0 73%);border-color:#bccbd0}
+.combo-bottle:nth-child(2):before{left:40px;width:29px;height:31px;background:linear-gradient(90deg,#232b34,#8999a6,#212a35)}
+.combo-bottle:nth-child(3){height:175px;width:85px;background:linear-gradient(110deg,#87684dd1,#ceb997c9 45%,#5b412dcc)}
+.combo-bottle:nth-child(3):before{left:28px}
+.combo-stage-text{position:absolute;bottom:28px;left:20px;right:20px;color:#efdfc4;letter-spacing:.18em;text-transform:uppercase;font-size:11px;text-align:center}
+.combo-badge{position:absolute;top:25px;right:25px;border:1px solid #d5b68080;color:#f9e8cb;background:#23201a;padding:9px 13px;border-radius:99px;font-size:11px;letter-spacing:.05em}
+.combo-detail{margin:40px auto 0;max-width:1140px;display:flex;gap:20px;align-items:center;padding:18px 22px;border:1px solid #b89e7644;border-radius:14px;font-size:14px;line-height:1.6}
+.combo-detail i{color:#b08c59;font-size:22px}.combo-detail p{margin:0}
+@media(max-width:780px){.combo-layout{grid-template-columns:1fr}.combo-stage{min-height:380px}.combo-landing{padding-top:30px}.combo-bottle{transform:scale(.85)}.combo-bottle:nth-child(2){transform:scale(.85)}.combo-bottle:nth-child(3){transform:scale(.85)}.combo-art{gap:0}}
+</style>
+<script defer src="js/theme-init.js"></script>
+<script defer src="js/config.js"></script>
+<script defer src="js/api.js"></script>
+<script defer src="js/layout.js"></script>
+<script defer src="js/pwa.js"></script>
+</head>
+<body data-page="combos">
+<div id="appHeader"></div>
+<main class="page-shell combo-landing">
+<section class="combo-layout" aria-labelledby="combosTitle">
+  <div class="combo-copy">
+    <p class="combo-eyebrow"><i class="fa-solid fa-gift"></i> Una nueva forma de descubrir fragancias</p>
+    <h1 id="combosTitle">Combos <em>próximamente.</em></h1>
+    <p>Estamos preparando selecciones de perfumes para diferentes ocasiones: fragancias frescas, aromas intensos y opciones para regalar. Muy pronto podrás descubrirlas aquí.</p>
+    <div class="combo-actions">
+      <a class="primary-btn" href="productos.html"><i class="fa-solid fa-spray-can-sparkles"></i> Explorar perfumes</a>
+      <a class="secondary-btn" href="https://wa.me/51963257194?text=Hola%2C%20quisiera%20consultar%20por%20los%20pr%C3%B3ximos%20combos%20de%20Parfum." target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> Consultar</a>
+    </div>
+    <p class="combo-note"><i class="fa-solid fa-circle-info"></i> Aún no hay combos a la venta. Los productos y precios se publicarán cuando estén disponibles.</p>
+  </div>
+  <div class="combo-stage" role="img" aria-label="Ilustración conceptual de tres frascos de perfumes para futuros combos">
+    <span class="combo-badge">EN PREPARACIÓN</span>
+    <div class="combo-art" aria-hidden="true"><div class="combo-bottle"></div><div class="combo-bottle"></div><div class="combo-bottle"></div></div>
+    <span class="combo-stage-text">Selecciones especiales · Parfum</span>
+  </div>
+</section>
+<section class="combo-detail">
+  <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+  <p><strong>Combinaciones pensadas para ti.</strong> Cuando nuestros combos estén listos, mostraremos sus perfumes incluidos, presentaciones, disponibilidad y precio total antes de que puedas comprarlos.</p>
+</section>
+</main>
+<div id="appFooter"></div>
+</body>
+</html>
