@@ -5,30 +5,20 @@
     const pathSlug = location.pathname.match(/\/decants\/([^/]+)\/?$/)?.[1];
     const slug = params.get("slug") || (pathSlug ? decodeURIComponent(pathSlug) : null);
     const id = params.get("id");
-    const reference = slug || id || PARFUM_FALLBACK_PRODUCTS[0]?.slug;
+    const reference = slug || id || "";
     const grid = document.getElementById("detailGrid");
     const profile = document.getElementById("fragranceProfile");
     const status = document.getElementById("detailStatus");
     const reviewSubmit = document.getElementById("reviewSubmit");
     const reviewCancel = document.getElementById("reviewCancel");
 
-    const fallback = ParfumAPI.fallbackById(reference) || {
-        slug: reference,
-        nombre: ParfumDetails.get(reference)?.nombre || "Perfume Parfum",
-        marca: ParfumDetails.get(reference)?.marca || "Parfum",
-        categoria: ParfumDetails.get(reference)?.categoria || "Perfume",
-        genero: ParfumDetails.get(reference)?.genero || "Hombre",
-        concentracion: ParfumDetails.get(reference)?.concentracion || "",
-        precio: 0,
-        stock: 0,
-        presentaciones: [],
-        decantDisponible: true,
-        decants: [],
-        fallbackImage: "imagen/perfumes/perfume-default.png",
-        activo: true
+    // No usamos datos comerciales precargados: la API es la fuente de verdad.
+    let product = {
+        nombre:"Consultando perfume…", marca:"Parfum", categoria:"", genero:"",
+        concentracion:"", precio:0, stock:0, presentaciones:[],
+        decantDisponible:false, decants:[], activo:false,
+        fallbackImage:"imagen/perfumes/perfume-default.png"
     };
-
-    let product = ParfumDetails.merge(fallback, reference);
     let mode = "DECANT";
     let selectedBottle = ParfumAPI.defaultPresentation(product);
     let selectedDecant = ParfumAPI.defaultDecant(product);
@@ -43,23 +33,12 @@
     const chips = (value, className = "profile-chip") => splitList(value).map(item => `<span class="${className}">${esc(item)}</span>`).join("");
     const fact = (icon, label, value) => value ? `<article class="fragrance-fact"><i class="${icon}"></i><div><small>${esc(label)}</small><strong>${esc(value)}</strong></div></article>` : "";
 
-    function localDecants() {
-        return [
-            {id:"local-3", envaseId:"local-3", envaseNombre:"Vidrio negro 3 ml", mililitros:3, etiqueta:"3 ml · Vidrio negro", precio:0, stock:0, activo:true, ordenVisual:10, fallbackImage:"imagen/decants/decant-3ml.png"},
-            {id:"local-5", envaseId:"local-5", envaseNombre:"Vidrio negro 5 ml", mililitros:5, etiqueta:"5 ml · Vidrio negro", precio:0, stock:0, activo:true, ordenVisual:20, fallbackImage:"imagen/decants/decant-5ml.png"},
-            {id:"local-10", envaseId:"local-10", envaseNombre:"Premium degradé 10 ml", mililitros:10, etiqueta:"10 ml · Premium degradé", precio:0, stock:0, activo:true, ordenVisual:30, fallbackImage:"imagen/decants/decant-10ml-premium.png"},
-            {id:"local-20", envaseId:"local-20", envaseNombre:"Atomizador 20 ml", mililitros:20, etiqueta:"20 ml", precio:0, stock:0, activo:true, ordenVisual:40, fallbackImage:"imagen/decants/decant-10ml-premium.png"},
-            {id:"local-30", envaseId:"local-30", envaseNombre:"Atomizador 30 ml", mililitros:30, etiqueta:"30 ml", precio:0, stock:0, activo:true, ordenVisual:50, fallbackImage:"imagen/decants/decant-10ml-premium.png"}
-        ];
-    }
-
     function bottles() {
         return ParfumAPI.activePresentations(product);
     }
 
     function decants() {
-        const real = ParfumAPI.activeDecants(product);
-        return real.length ? real : localDecants();
+        return ParfumAPI.activeDecants(product);
     }
 
     function ensureSelections() {
@@ -392,19 +371,21 @@
                 ParfumAPI.request(`/historial/${product.id}`, {method:"POST"}).catch(() => {});
             }
         } catch (error) {
-            status.textContent = "Servidor iniciando. Mostrando la ficha local de respaldo; se actualizará sola.";
+            status.textContent = "No se pudo consultar esta ficha. Reintentaremos la conexión con el catálogo real.";
             if (detailRetryAttempt < Number(PARFUM_CONFIG.CATALOG_RETRY_ATTEMPTS || 14)) {
                 detailRetryAttempt += 1;
                 clearTimeout(detailRetryTimer);
                 detailRetryTimer = setTimeout(load, Number(PARFUM_CONFIG.CATALOG_RETRY_MS || 15000));
             }
         }
-        window.ParfumActivity?.track("PRODUCT_VIEW", {
-            productoId: product.id,
-            productoNombre: product.nombre,
-            detalle: product.marca
-        });
-        loadReviews();
+        if (product.id) {
+            window.ParfumActivity?.track("PRODUCT_VIEW", {
+                productoId: product.id,
+                productoNombre: product.nombre,
+                detalle: product.marca
+            });
+            loadReviews();
+        }
     }
 
     function resetReviewForm() {
