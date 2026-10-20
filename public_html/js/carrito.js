@@ -242,7 +242,7 @@
         // Los productos precargados usan IDs de variantes temporales.
         // Nunca cambiamos silenciosamente la cantidad en ml ni el envase elegido.
         const byMl = list.filter(variant => Number(variant.mililitros) === Number(item.mililitros));
-        const selected = type === "DECANT" && item.envaseId != null
+        const selected = type === "DECANT" && positiveId(item.envaseId)
             ? byMl.filter(variant => String(variant.envaseId) === String(item.envaseId))
             : byMl;
         return selected.length === 1 ? selected[0] : null;
