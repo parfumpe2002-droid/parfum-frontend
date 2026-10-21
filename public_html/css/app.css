@@ -213,3 +213,28 @@ html[data-theme="dark"] .payment-method-card,html[data-theme="dark"] .order-paym
         justify-content:center;
     }
 }
+
+
+/* Reseñas compactas: inicialmente cuatro, con desplazamiento interno al ampliar. */
+.reviews-panel{min-width:0}
+.reviews-list{min-width:0}
+.reviews-list.expanded{max-height:min(62vh,540px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:10px;scrollbar-width:thin;scrollbar-color:var(--gold) transparent}
+.reviews-list.expanded:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:4px}
+.reviews-controls{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding-top:16px;margin-top:12px;border-top:1px solid var(--line)}
+.reviews-controls[hidden]{display:none!important}
+.reviews-counter{font-size:12px;color:var(--muted)}
+.reviews-more-btn{font-size:11px;text-transform:none;letter-spacing:0}
+.reviews-more-btn i{font-size:11px}
+.review-card{overflow-wrap:anywhere}
+html[data-theme="dark"] .reviews-controls{border-color:#444038}
+html[data-theme="dark"] .reviews-counter{color:#c6bfb2}
+@media(max-width:660px){.reviews-list.expanded{max-height:min(58vh,440px)}.reviews-controls{align-items:stretch;flex-direction:column}.reviews-more-btn{justify-content:center}}
+
+/* Privacidad de contacto: pago por QR y consulta sin publicar el teléfono como texto. */
+.payment-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;text-align:center;padding:12px 15px;border-radius:8px;background:#e5f3e9;border:1px solid #a0c4a9;color:#135b32;text-decoration:none;font-size:11px;line-height:1.5;font-weight:700}
+.payment-whatsapp-link:hover{background:#d7ebdd;color:#0d4726}
+.payment-whatsapp-link:focus-visible{outline:3px solid #37995e;outline-offset:3px}
+.payment-privacy-note{font-size:10px;line-height:1.6;margin:0;color:var(--muted)}
+html[data-theme="dark"] .payment-whatsapp-link{background:#173324;border-color:#3e7853;color:#adf0c1}
+html[data-theme="dark"] .payment-whatsapp-link:hover{background:#204b34;color:#d2ffdf}
+html[data-theme="dark"] .payment-privacy-note{color:#b9b1a3}
