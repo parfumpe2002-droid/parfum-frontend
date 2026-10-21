@@ -47,6 +47,9 @@ jobs:
               "privacidad.html":"contactar con nuestro equipo mediante",
               "libro-reclamaciones.html":"WhatsApp de atención",
               "css/app.css":".reviews-list.expanded{max-height:",
+              "decants/hawas-ice/":'id="reviewsMore"',
+              "decants/dior-homme-intense/":'id="reviewsMore"',
+              "decants/erba-pura/":'id="reviewsMore"',
 
           }
           for attempt in range(35):
@@ -64,7 +67,7 @@ jobs:
                               assert "+51 963 257 194" not in page,"phone still printed in public copy"
                           if path=="js/carrito.js":
                               assert "Número Yape</dt>" not in page,"phone is still exposed in checkout"
-                  print("PARFUM_PRIVACY_AND_REVIEWS_DEPLOYED_OK",flush=True)
+                  print("PARFUM_PRODUCT_DETAIL_AND_REVIEWS_DEPLOYED_OK",flush=True)
                   break
               except Exception as exc:
                   print("WAIT",attempt+1,str(exc)[:160],flush=True)
