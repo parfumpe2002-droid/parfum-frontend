@@ -13,6 +13,13 @@ on:
       - "public_html/js/layout.js"
       - "public_html/login.html"
       - "public_html/css/layout.css"
+      - "public_html/contacto.html"
+      - "public_html/detalle.html"
+      - "public_html/privacidad.html"
+      - "public_html/libro-reclamaciones.html"
+      - "public_html/js/carrito.js"
+      - "public_html/js/detalle.js"
+      - "public_html/css/app.css"
   workflow_dispatch:
 jobs:
   verify:
@@ -33,6 +40,14 @@ jobs:
               "js/auth.js":"rememberSession",
               "js/layout.js":"session-expired-dialog",
               "login.html":"Mantener sesión iniciada",
+              "contacto.html":"Conversa directamente con nuestro equipo",
+              "detalle.html":'id="reviewsMore"',
+              "js/detalle.js":"REVIEWS_PREVIEW_COUNT = 4",
+              "js/carrito.js":"payment-whatsapp-link",
+              "privacidad.html":"contactar con nuestro equipo mediante",
+              "libro-reclamaciones.html":"WhatsApp de atención",
+              "css/app.css":".reviews-list.expanded{max-height:",
+
           }
           for attempt in range(35):
               try:
@@ -44,7 +59,12 @@ jobs:
                           assert r.status==200 and marker in page,(path,r.status)
                           if path=="index.html":
                               assert 'data-fallback="true"' not in page,"old hardcoded products"
-                  print("PARFUM_LIVE_CATALOG_AND_SESSIONS_DEPLOYED_OK",flush=True)
+                              assert '"telephone"' not in page,"visible phone still in structured data"
+                          if path in ["contacto.html","privacidad.html","libro-reclamaciones.html"]:
+                              assert "+51 963 257 194" not in page,"phone still printed in public copy"
+                          if path=="js/carrito.js":
+                              assert "Número Yape</dt>" not in page,"phone is still exposed in checkout"
+                  print("PARFUM_PRIVACY_AND_REVIEWS_DEPLOYED_OK",flush=True)
                   break
               except Exception as exc:
                   print("WAIT",attempt+1,str(exc)[:160],flush=True)

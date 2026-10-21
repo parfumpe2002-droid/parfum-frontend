@@ -25,6 +25,8 @@
     let quantity = 1;
     let currentUserReview = null;
     let reviewsCache = [];
+    const REVIEWS_PREVIEW_COUNT = 4;
+    let reviewsExpanded = false;
     let detailRetryAttempt = 0;
     let detailRetryTimer = null;
 
@@ -396,7 +398,7 @@
         reviewCancel.hidden = true;
     }
 
-    function renderReviews(reviews) {
+    function renderReviews(reviews, {preserveDraft = false} = {}) {
         const box = document.getElementById("reviewsList");
         const viewer = ParfumAPI.getUser();
         reviewsCache = Array.isArray(reviews) ? reviews : [];
@@ -404,17 +406,23 @@
             ? reviewsCache.find(review => String(review.usuarioId) === String(viewer.id)) || null
             : null;
 
-        if (currentUserReview) {
-            document.getElementById("rating").value = String(currentUserReview.puntuacion || 5);
-            document.getElementById("reviewComment").value = currentUserReview.comentario || "";
-            reviewSubmit.textContent = "Actualizar reseña";
-            reviewCancel.hidden = false;
-        } else {
-            resetReviewForm();
+        if (!preserveDraft) {
+            if (currentUserReview) {
+                document.getElementById("rating").value = String(currentUserReview.puntuacion || 5);
+                document.getElementById("reviewComment").value = currentUserReview.comentario || "";
+                reviewSubmit.textContent = "Actualizar reseña";
+                reviewCancel.hidden = false;
+            } else {
+                resetReviewForm();
+            }
         }
 
+        const visibleReviews = reviewsExpanded
+            ? reviewsCache
+            : reviewsCache.slice(0, REVIEWS_PREVIEW_COUNT);
+
         box.innerHTML = reviewsCache.length
-            ? reviewsCache.map(review => {
+            ? visibleReviews.map(review => {
                 const own = viewer && String(review.usuarioId) === String(viewer.id);
                 const canDelete = own || viewer?.rol === "ADMIN";
                 return `<article class="review-card" data-review-id="${esc(review.id)}">
@@ -424,7 +432,30 @@
                 </article>`;
             }).join("")
             : '<p class="muted">Aún no hay reseñas. Sé el primero en comentar.</p>';
+
+        // Con muchas reseñas, evita hacer crecer la ficha del perfume.
+        const hasMore = reviewsCache.length > REVIEWS_PREVIEW_COUNT;
+        const controls = document.getElementById("reviewsControls");
+        const moreButton = document.getElementById("reviewsMore");
+        if (!hasMore) reviewsExpanded = false;
+        controls.hidden = !hasMore;
+        box.classList.toggle("expanded", hasMore && reviewsExpanded);
+        box.tabIndex = hasMore && reviewsExpanded ? 0 : -1;
+        moreButton.setAttribute("aria-expanded", String(hasMore && reviewsExpanded));
+        document.getElementById("reviewsMoreLabel").textContent = reviewsExpanded
+            ? "Ver menos reseñas"
+            : `Ver más reseñas (${reviewsCache.length - REVIEWS_PREVIEW_COUNT})`;
+        moreButton.querySelector("i")?.classList.toggle("fa-chevron-up", reviewsExpanded);
+        moreButton.querySelector("i")?.classList.toggle("fa-chevron-down", !reviewsExpanded);
+        document.getElementById("reviewsCounter").textContent =
+            `Mostrando ${visibleReviews.length} de ${reviewsCache.length} reseñas`;
     }
+
+    document.getElementById("reviewsMore").addEventListener("click", () => {
+        reviewsExpanded = !reviewsExpanded;
+        renderReviews(reviewsCache, {preserveDraft:true});
+        document.getElementById("reviewsList").scrollTop = 0;
+    });
 
     async function loadReviews() {
         const box = document.getElementById("reviewsList");

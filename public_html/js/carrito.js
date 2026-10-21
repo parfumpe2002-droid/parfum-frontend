@@ -25,12 +25,14 @@
         YAPE: {
             body: `
                 <div class="payment-method-card yape-card">
-                    <div class="payment-method-heading"><i class="fa-solid fa-mobile-screen-button"></i><div><b>Paga con Yape</b><small>Escanea el QR o usa el número.</small></div></div>
+                    <div class="payment-method-heading"><i class="fa-solid fa-mobile-screen-button"></i><div><b>Paga con Yape</b><small>Escanea este QR desde Yape para realizar tu pago.</small></div></div>
                     <img class="payment-qr" src="imagen/pagos/yape-william-lopez.png" alt="Código QR de Yape de William López"/>
                     <dl class="payment-data-list">
-                        <div><dt>Número Yape</dt><dd><span>963 257 194</span><button type="button" data-copy="963257194" aria-label="Copiar número Yape"><i class="fa-regular fa-copy"></i></button></dd></div>
+
                         <div><dt>Titular</dt><dd><span>William López</span></dd></div>
                     </dl>
+                    <a class="payment-whatsapp-link" href="https://wa.me/51963257194?text=Hola%2C%20quiero%20consultar%20sobre%20el%20pago%20de%20mi%20pedido%20de%20Parfum." target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> Consultar sobre el pago por WhatsApp <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    <p class="payment-privacy-note">Por privacidad no mostramos el número de contacto. También puedes coordinar tu pago por WhatsApp.</p>
                 </div>`
         },
         TRANSFERENCIA_BCP: {
