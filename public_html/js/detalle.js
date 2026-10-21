@@ -398,7 +398,7 @@
         reviewCancel.hidden = true;
     }
 
-    function renderReviews(reviews) {
+    function renderReviews(reviews, {preserveDraft = false} = {}) {
         const box = document.getElementById("reviewsList");
         const viewer = ParfumAPI.getUser();
         reviewsCache = Array.isArray(reviews) ? reviews : [];
@@ -406,13 +406,15 @@
             ? reviewsCache.find(review => String(review.usuarioId) === String(viewer.id)) || null
             : null;
 
-        if (currentUserReview) {
-            document.getElementById("rating").value = String(currentUserReview.puntuacion || 5);
-            document.getElementById("reviewComment").value = currentUserReview.comentario || "";
-            reviewSubmit.textContent = "Actualizar reseña";
-            reviewCancel.hidden = false;
-        } else {
-            resetReviewForm();
+        if (!preserveDraft) {
+            if (currentUserReview) {
+                document.getElementById("rating").value = String(currentUserReview.puntuacion || 5);
+                document.getElementById("reviewComment").value = currentUserReview.comentario || "";
+                reviewSubmit.textContent = "Actualizar reseña";
+                reviewCancel.hidden = false;
+            } else {
+                resetReviewForm();
+            }
         }
 
         const visibleReviews = reviewsExpanded
@@ -451,7 +453,7 @@
 
     document.getElementById("reviewsMore").addEventListener("click", () => {
         reviewsExpanded = !reviewsExpanded;
-        renderReviews(reviewsCache);
+        renderReviews(reviewsCache, {preserveDraft:true});
         document.getElementById("reviewsList").scrollTop = 0;
     });
 
