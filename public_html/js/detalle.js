@@ -451,6 +451,39 @@
             `Mostrando ${visibleReviews.length} de ${reviewsCache.length} reseñas`;
     }
 
+    // Las páginas /decants/<slug>/ se prerenderizaron con un HTML anterior.
+    // El detalle.html moderno ya contiene los controles; las fichas antiguas no.
+    // Adaptamos ambas versiones antes de instalar listeners o pedir el catálogo.
+    function ensureReviewMarkup() {
+        if (document.getElementById("reviewsMore")) return;
+        const oldList = document.getElementById("reviewsList");
+        if (!oldList) return;
+
+        oldList.id = "reviewsPanel";
+        oldList.classList.add("reviews-panel");
+
+        const list = document.createElement("div");
+        list.id = "reviewsList";
+        list.className = "reviews-list";
+        list.setAttribute("aria-live", "polite");
+        while (oldList.firstChild) list.appendChild(oldList.firstChild);
+
+        const controls = document.createElement("div");
+        controls.id = "reviewsControls";
+        controls.className = "reviews-controls";
+        controls.hidden = true;
+        controls.innerHTML = `
+            <span id="reviewsCounter" class="reviews-counter"></span>
+            <button type="button" class="secondary-btn reviews-more-btn" id="reviewsMore"
+                aria-controls="reviewsList" aria-expanded="false">
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                <span id="reviewsMoreLabel">Ver más reseñas</span>
+            </button>`;
+        oldList.appendChild(list);
+        oldList.appendChild(controls);
+    }
+
+    ensureReviewMarkup();
     document.getElementById("reviewsMore").addEventListener("click", () => {
         reviewsExpanded = !reviewsExpanded;
         renderReviews(reviewsCache, {preserveDraft:true});
