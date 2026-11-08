@@ -37,6 +37,24 @@
   force = true
 
 [[redirects]]
+  from = "/decants/9pm/"
+  to = "/decants/afnan-9pm/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/decants/9am-dive/"
+  to = "/decants/afnan-9am-dive/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/decants/odyssey-mandarin-sky/"
+  to = "/decants/mandarin-sky/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/decants/*"
   to = "/detalle.html"
   status = 200
@@ -47,16 +65,19 @@
   for = "/admin.html"
   [headers.values]
     Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
 
 [[headers]]
   for = "/login.html"
   [headers.values]
     Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
 
 [[headers]]
   for = "/registro.html"
   [headers.values]
     Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
 
 # Enlaces antiguos de ofertas siguen funcionando.
 [[redirects]]
@@ -64,3 +85,31 @@
   to = "/combos.html"
   status = 301
   force = true
+
+[[headers]]
+  for = "/carrito.html"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+
+[[headers]]
+  for = "/pedidos.html"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+
+[[headers]]
+  for = "/perfil.html"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+
+[[headers]]
+  for = "/favoritos.html"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
