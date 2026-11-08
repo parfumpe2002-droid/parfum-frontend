@@ -66,7 +66,11 @@
                     <div class="order-payment-summary">
                         <div><span>Método</span><b>${esc(METHOD_LABELS[order.metodoPago] || order.metodoPago)}</b></div>
                         <div><span>Operación</span><b>${esc(order.numeroOperacion || "—")}</b></div>
-                        <div><span>Entrega</span><b>${esc(order.direccionEntrega)}</b></div>
+                        <div><span>Transporte</span><b>${esc(order.metodoEnvio === "SHALOM" ? "Shalom" : order.metodoEnvio === "INDRIVE" ? "InDrive" : "Por coordinar")}</b></div>
+                        <div><span>Envío</span><b>${order.envioGratis ? "Gratis · lo cubre Parfum" : "Se paga aparte"}</b></div>
+                        ${order.nombreDestinatario ? `<div><span>Destinatario</span><b>${esc(order.nombreDestinatario)}</b></div>` : ""}
+                        ${order.agenciaEnvio ? `<div><span>Agencia</span><b>${esc(order.agenciaEnvio)}</b></div>` : ""}
+                        <div><span>Destino</span><b>${esc(order.direccionEntrega)}</b></div>
                         ${order.comprobanteUrl ? `<a class="secondary-btn proof-link" href="${esc(order.comprobanteUrl)}" target="_blank" rel="noopener"><i class="fa-solid fa-receipt"></i> Ver comprobante</a>` : ""}
                     </div>
                     ${observation}
