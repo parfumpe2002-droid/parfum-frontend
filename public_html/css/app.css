@@ -238,3 +238,33 @@ html[data-theme="dark"] .reviews-counter{color:#c6bfb2}
 html[data-theme="dark"] .payment-whatsapp-link{background:#173324;border-color:#3e7853;color:#adf0c1}
 html[data-theme="dark"] .payment-whatsapp-link:hover{background:#204b34;color:#d2ffdf}
 html[data-theme="dark"] .payment-privacy-note{color:#b9b1a3}
+
+
+/* Entregas Parfum: Shalom, InDrive y promoción desde S/299 */
+.checkout-summary-note{font-size:11px;line-height:1.55;color:var(--muted);margin:2px 0 0}
+.shipping-offer{display:flex;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--line);background:var(--soft);border-radius:12px;font-size:12px;line-height:1.5;font-weight:600}
+.shipping-offer i{color:var(--gold-dark);font-size:17px}
+.shipping-offer.is-free{border-color:#b9cfb1;background:#f1f7ed;color:#276133}
+.shipping-offer.is-free i{color:#276133}
+.shipping-checkout-section{border:1px solid var(--line);border-radius:16px;padding:15px;display:grid;gap:14px;background:var(--paper)}
+.shipping-checkout-heading{display:flex;align-items:flex-start;gap:11px}
+.shipping-checkout-heading>i{width:38px;height:38px;display:grid;place-items:center;flex:none;border-radius:11px;background:var(--soft);color:var(--gold-dark)}
+.shipping-checkout-heading h3{margin:0 0 4px;font-size:15px}
+.shipping-checkout-heading p{font-size:11px;line-height:1.6;margin:0;color:var(--muted)}
+.shipping-conditional-fields{display:grid;gap:12px}
+.shipping-conditional-fields[hidden]{display:none!important}
+.shipping-checkout-section .field{display:grid;gap:6px}
+.shipping-checkout-section .field label{font-size:11px;font-weight:700}
+.shipping-checkout-section input,.shipping-checkout-section select,.shipping-checkout-section textarea{width:100%;min-width:0;box-sizing:border-box}
+.shipping-help{font-size:11px;line-height:1.55;color:var(--muted);margin:0}
+.shipping-promo-copy{border-top:1px solid var(--line);padding-top:12px}
+.admin-order-shipping{margin-top:14px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--soft);display:grid;gap:5px;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.admin-order-shipping strong{display:flex;align-items:center;gap:8px;font-size:12px}
+.admin-order-shipping strong i{color:var(--gold-dark)}
+.admin-order-shipping span{font-weight:700;color:var(--gold-dark)}
+.admin-order-shipping p{margin:0}
+.admin-order-shipping small{color:var(--muted);font-size:10px}
+html[data-theme="dark"] .shipping-offer,html[data-theme="dark"] .shipping-checkout-section,html[data-theme="dark"] .admin-order-shipping{background:#1c1e1a;border-color:#44413b;color:#f0ece4}
+html[data-theme="dark"] .shipping-offer.is-free{background:#183022;border-color:#416a4d;color:#d0ebd6}
+html[data-theme="dark"] .shipping-offer.is-free i{color:#b2e0bf}
+@media(max-width:620px){.shipping-checkout-section{padding:12px}.shipping-offer{padding:11px;font-size:11px}}
