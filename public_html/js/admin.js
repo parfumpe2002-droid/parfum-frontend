@@ -822,7 +822,15 @@
                     <section>
                         <h4>Productos</h4>
                         <ul class="admin-order-products">${details}</ul>
-                        <p class="admin-order-address"><i class="fa-solid fa-location-dot"></i> ${esc(order.direccionEntrega)}</p>
+                        <div class="admin-order-shipping">
+                            <strong><i class="fa-solid fa-truck-fast"></i> ${esc(order.metodoEnvio === "SHALOM" ? "Shalom · recojo en agencia" : order.metodoEnvio === "INDRIVE" ? "InDrive · a domicilio" : "Envío por coordinar")}</strong>
+                            <span>${order.envioGratis ? "Envío gratis · cubierto por Parfum" : "Envío pagado aparte · confirmar con cliente"}</span>
+                            ${order.nombreDestinatario ? `<p><b>Recibe:</b> ${esc(order.nombreDestinatario)}</p>` : ""}
+                            ${order.agenciaEnvio ? `<p><b>Agencia Shalom:</b> ${esc(order.agenciaEnvio)}</p>` : ""}
+                            ${order.documentoDestinatario ? `<p><b>Documento:</b> ${esc(order.documentoDestinatario)}</p>` : ""}
+                            <p><b>Destino:</b> ${esc(order.direccionEntrega)}</p>
+                            <small>Confirmar despacho y cobertura con el cliente antes de enviar.</small>
+                        </div>
                     </section>
                     <section class="admin-payment-review">
                         <div class="admin-payment-head">
