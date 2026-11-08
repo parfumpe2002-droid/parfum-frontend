@@ -72,8 +72,9 @@
 
     function renderShipping() {
         const total = subtotal();
-        const free = items.length > 0 && total >= FREE_SHIPPING_THRESHOLD;
-        const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+        const cents = Math.round(total * 100);
+        const free = items.length > 0 && cents >= FREE_SHIPPING_THRESHOLD * 100;
+        const remaining = Math.max(0, (FREE_SHIPPING_THRESHOLD * 100 - cents) / 100);
         shippingSummary.textContent = free ? "Gratis" : "Se paga aparte";
         shippingSummaryNote.textContent = free
             ? "Parfum cubre el transporte. William coordinará el despacho contigo."
