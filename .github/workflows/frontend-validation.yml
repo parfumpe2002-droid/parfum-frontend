@@ -1,5 +1,14 @@
 name: Parfum frontend validation
 on:
+  push:
+    branches: ["master"]
+    paths:
+      - "public_html/carrito.html"
+      - "public_html/js/carrito.js"
+      - "public_html/js/admin.js"
+      - "public_html/js/pedidos.js"
+      - "public_html/css/app.css"
+      - ".github/workflows/frontend-validation.yml"
   pull_request:
     branches: ["master"]
   workflow_dispatch:
