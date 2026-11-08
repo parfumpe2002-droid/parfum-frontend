@@ -43,8 +43,10 @@
         <aside class="panel summary-card checkout-card">
             <h2>Resumen</h2>
             <div class="summary-line"><span>Subtotal</span><strong id="subtotal">S/ 0.00</strong></div>
-            <div class="summary-line"><span>Envío</span><span>Se coordina</span></div>
-            <div class="summary-line summary-total"><span>Total</span><strong id="total">S/ 0.00</strong></div>
+            <div class="summary-line"><span>Envío</span><strong id="shippingSummary">Se paga aparte</strong></div>
+            <div class="summary-line summary-total"><span>Total de productos</span><strong id="total">S/ 0.00</strong></div>
+            <p class="checkout-summary-note" id="shippingSummaryNote">El transporte no está incluido en el total. Se coordina antes del despacho.</p>
+            <div class="shipping-offer" id="shippingOffer" aria-live="polite"><i class="fa-solid fa-truck-fast"></i><span>Envío gratis desde S/299 en productos.</span></div>
 
             <section class="decant-gift-box" id="decantGiftBox" hidden>
                 <div class="decant-gift-heading"><i class="fa-solid fa-gift"></i><div><b>¡Tienes un decant gratis!</b><small>Por comprar 3 o más decants, elige un perfume árabe de 3 ml.</small></div></div>
@@ -85,6 +87,55 @@
                     <small>Nos servirá para coordinar el pago, envío o cualquier detalle del pedido.</small>
                 </div>
 
+                <section class="shipping-checkout-section" aria-labelledby="shippingTitle">
+                    <div class="shipping-checkout-heading">
+                        <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+                        <div>
+                            <h3 id="shippingTitle">Entrega de tu pedido</h3>
+                            <p>Elige cómo recibirás tus perfumes. William coordinará el despacho contigo.</p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="shippingMethod">Empresa de envío</label>
+                        <select id="shippingMethod" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="SHALOM">Shalom — recojo en agencia</option>
+                            <option value="INDRIVE">InDrive — entrega a dirección (según cobertura)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="recipientName">Nombre completo de quien recibe</label>
+                        <input id="recipientName" maxlength="100" placeholder="Nombre y apellido del destinatario" autocomplete="name" required/>
+                    </div>
+                    <div id="shalomFields" class="shipping-conditional-fields" hidden>
+                        <div class="field">
+                            <label for="shalomDestination">Departamento, provincia y distrito de destino</label>
+                            <input id="shalomDestination" maxlength="200" placeholder="Ej. Lima, Lima, San Miguel"/>
+                        </div>
+                        <div class="field">
+                            <label for="shalomAgency">Agencia Shalom para recoger</label>
+                            <input id="shalomAgency" maxlength="120" placeholder="Indica la sede o agencia elegida"/>
+                        </div>
+                        <div class="field">
+                            <label for="shalomDocument">DNI o carné de extranjería de quien recibe</label>
+                            <input id="shalomDocument" maxlength="12" placeholder="Documento del destinatario" autocomplete="off"/>
+                        </div>
+                        <p class="shipping-help">El destinatario deberá presentar su documento al recoger el pedido. El despacho se coordina después de confirmar el pago.</p>
+                    </div>
+                    <div id="indriveFields" class="shipping-conditional-fields" hidden>
+                        <div class="field">
+                            <label for="deliveryAddress">Dirección completa de entrega</label>
+                            <textarea id="deliveryAddress" rows="3" maxlength="300" placeholder="Distrito, avenida, calle y número"></textarea>
+                        </div>
+                        <div class="field">
+                            <label for="deliveryReference">Referencia para encontrar la dirección</label>
+                            <input id="deliveryReference" maxlength="45" placeholder="Ej. Portón negro, cerca del parque"/>
+                        </div>
+                        <p class="shipping-help">InDrive está sujeto a cobertura y disponibilidad. William confirmará el servicio y horario antes del despacho.</p>
+                    </div>
+                    <p class="shipping-help shipping-promo-copy" id="shippingMethodNote" aria-live="polite">El envío se paga aparte en pedidos menores a S/299. Desde S/299, Parfum cubre el envío.</p>
+                </section>
+
                 <div class="field">
                     <label for="operationNumber">Número de operación (opcional)</label>
                     <input id="operationNumber" maxlength="80" placeholder="Ej. 123456789" autocomplete="off"/>
@@ -105,14 +156,9 @@
                     <small>En computadora puedes dejarlo para después y coordinar el pago por celular.</small>
                 </div>
 
-                <div class="field">
-                    <label for="deliveryAddress">Dirección de entrega</label>
-                    <textarea id="deliveryAddress" required rows="3" placeholder="Distrito, dirección y referencia"></textarea>
-                </div>
-
                 <div class="payment-notice">
                     <i class="fa-solid fa-circle-info"></i>
-                    <p>No manejamos pago contra entrega. Si aún no adjuntas el comprobante, el pedido quedará registrado para coordinar el pago contigo.</p>
+                    <p>No manejamos pago contra entrega. El pago de los perfumes se verifica antes del despacho. El envío se paga aparte para compras menores a S/299; desde S/299 es gratis y William coordina la entrega.</p>
                 </div>
 
                 <label class="legal-check checkout-legal-check">
