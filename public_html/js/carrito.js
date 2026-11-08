@@ -15,6 +15,20 @@
     const giftBox = document.getElementById("decantGiftBox");
     const giftSelect = document.getElementById("giftArabicProduct");
     const giftPreview = document.getElementById("giftPreview");
+    const shippingSelect = document.getElementById("shippingMethod");
+    const recipientInput = document.getElementById("recipientName");
+    const shalomFields = document.getElementById("shalomFields");
+    const indriveFields = document.getElementById("indriveFields");
+    const shalomDestination = document.getElementById("shalomDestination");
+    const shalomAgency = document.getElementById("shalomAgency");
+    const shalomDocument = document.getElementById("shalomDocument");
+    const deliveryAddress = document.getElementById("deliveryAddress");
+    const deliveryReference = document.getElementById("deliveryReference");
+    const shippingSummary = document.getElementById("shippingSummary");
+    const shippingSummaryNote = document.getElementById("shippingSummaryNote");
+    const shippingOffer = document.getElementById("shippingOffer");
+    const shippingMethodNote = document.getElementById("shippingMethodNote");
+    const FREE_SHIPPING_THRESHOLD = 299;
 
     let items = [];
     let giftProducts = [];
@@ -50,6 +64,40 @@
 
     function renderPaymentInstructions() {
         paymentInstructions.innerHTML = (PAYMENT_DATA[paymentSelect.value] || PAYMENT_DATA.YAPE).body;
+    }
+
+    function subtotal() {
+        return items.reduce((sum, item) => sum + Number(item.precio || 0) * Number(item.cantidad || 0), 0);
+    }
+
+    function renderShipping() {
+        const total = subtotal();
+        const free = items.length > 0 && total >= FREE_SHIPPING_THRESHOLD;
+        const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+        shippingSummary.textContent = free ? "Gratis" : "Se paga aparte";
+        shippingSummaryNote.textContent = free
+            ? "Parfum cubre el transporte. William coordinará el despacho contigo."
+            : "El transporte no está incluido en el total de productos; se confirma antes del despacho.";
+        shippingOffer.classList.toggle("is-free", free);
+        shippingOffer.innerHTML = free
+            ? '<i class="fa-solid fa-circle-check"></i><span>¡Tu pedido tiene envío gratis!</span>'
+            : '<i class="fa-solid fa-truck-fast"></i><span>' +
+              (items.length ? `Te faltan ${ParfumAPI.money(remaining)} para tener envío gratis.` : "Envío gratis desde S/299 en productos.") +
+              '</span>';
+        shippingMethodNote.textContent = free
+            ? "Envío gratis: Parfum cubre el transporte y William coordinará el despacho."
+            : "El envío se paga aparte directamente al operador de transporte. William confirmará el costo y despacho.";
+    }
+
+    function syncShippingFields() {
+        const shalom = shippingSelect.value === "SHALOM";
+        const indrive = shippingSelect.value === "INDRIVE";
+        shalomFields.hidden = !shalom;
+        indriveFields.hidden = !indrive;
+        shalomDestination.required = shalom;
+        shalomAgency.required = shalom;
+        shalomDocument.required = shalom;
+        deliveryAddress.required = indrive;
     }
 
     function updateGuestFields(logged) {
@@ -125,9 +173,10 @@
     }
 
     function render() {
-        const total = items.reduce((sum, item) => sum + Number(item.precio || 0) * Number(item.cantidad || 0), 0);
+        const total = subtotal();
         document.getElementById("subtotal").textContent = ParfumAPI.money(total);
         document.getElementById("total").textContent = ParfumAPI.money(total);
+        renderShipping();
         listElement.innerHTML = items.length ? `
             <div class="cart-list-panel">
                 <div class="cart-list-heading"><div><p class="section-kicker">Tu selección</p><h2>${items.length} ${items.length === 1 ? "producto" : "productos"}</h2></div><a href="productos.html" class="text-button">Seguir comprando</a></div>
@@ -167,11 +216,13 @@
         render();
         renderPaymentInstructions();
         updateGuestFields(ParfumAPI.isLogged());
+        syncShippingFields();
         await loadGiftProducts();
         if (ParfumAPI.isLogged()) {
             try {
                 const user = await ParfumAPI.request("/usuarios/me");
-                document.getElementById("deliveryAddress").value = user.direccion || "";
+                deliveryAddress.value = user.direccion || "";
+                recipientInput.value = [user.nombre, user.apellido].filter(Boolean).join(" ").trim();
                 phoneInput.value = user.telefono || "";
             } catch {}
         }
@@ -199,6 +250,11 @@
     });
 
     paymentSelect.addEventListener("change", renderPaymentInstructions);
+    shippingSelect.addEventListener("change", syncShippingFields);
+    document.getElementById("guestName").addEventListener("input", event => {
+        if (!recipientInput.dataset.edited) recipientInput.value = event.target.value;
+    });
+    recipientInput.addEventListener("input", () => { recipientInput.dataset.edited = "true"; });
     giftSelect.addEventListener("change", renderGiftPreview);
     paymentInstructions.addEventListener("click", event => {
         const button = event.target.closest("[data-copy]");
@@ -306,11 +362,23 @@
         const message = document.getElementById("checkoutMessage");
         const proof = proofInput.files[0];
         const operationNumber = document.getElementById("operationNumber").value.trim();
-        const deliveryAddress = document.getElementById("deliveryAddress").value.trim();
+        const method = shippingSelect.value;
+        const recipient = recipientInput.value.trim();
+        const destination = method === "SHALOM" ? shalomDestination.value.trim() : deliveryAddress.value.trim();
+        const agency = method === "SHALOM" ? shalomAgency.value.trim() : null;
+        const documentNumber = method === "SHALOM" ? shalomDocument.value.trim() : null;
+        const reference = method === "INDRIVE" ? deliveryReference.value.trim() : "";
+        const deliveryLocation = method === "INDRIVE" && reference ? `${destination} · Ref: ${reference}` : destination;
         const logged = ParfumAPI.isLogged();
 
         if (!items.length) return showError(message, "Agrega productos al carrito");
-        if (!deliveryAddress) return showError(message, "Ingresa la dirección de entrega");
+        if (!["SHALOM", "INDRIVE"].includes(method)) return showError(message, "Selecciona Shalom o InDrive");
+        if (!recipient || recipient.length < 3) return showError(message, "Ingresa el nombre completo del destinatario");
+        if (!destination || destination.length < 5) return showError(message, "Ingresa los datos de destino");
+        if (method === "SHALOM" && (!agency || !/^[A-Za-z0-9]{8,12}$/.test(documentNumber))) {
+            return showError(message, "Completa la agencia Shalom y el DNI o CE del destinatario");
+        }
+        if (deliveryLocation.length > 350) return showError(message, "La dirección y referencia son demasiado extensas");
         if (!phoneInput.value.trim()) {
             showError(message, "Ingresa un número de celular para coordinar el pedido");
             phoneInput.focus();
@@ -356,7 +424,11 @@
                     numeroOperacion:operationNumber || null,
                     comprobanteUrl:null,
                     comprobantePublicId:null,
-                    direccionEntrega:deliveryAddress,
+                    direccionEntrega:deliveryLocation,
+                    metodoEnvio:method,
+                    nombreDestinatario:recipient,
+                    agenciaEnvio:agency,
+                    documentoDestinatario:documentNumber,
                     nombreCliente:logged ? null : document.getElementById("guestName").value.trim(),
                     correoCliente:logged ? null : (document.getElementById("guestEmail").value.trim() || null),
                     telefonoContacto:phoneInput.value.trim()
@@ -381,9 +453,12 @@
                 });
             }
 
-            message.textContent = proof
+            const shippingMessage = order.envioGratis
+                ? " Tu envío es gratis; William coordinará el despacho."
+                : " El envío se paga aparte y William coordinará el despacho.";
+            message.textContent = (proof
                 ? `Pedido #${order.id} registrado. El pago quedó pendiente de verificación.`
-                : `Pedido #${order.id} registrado. El administrador te contactará para coordinar el pago.`;
+                : `Pedido #${order.id} registrado. El administrador te contactará para coordinar el pago.`) + shippingMessage;
             message.className = "form-message ok";
             window.ParfumActivity?.track("ORDER", {detalle:`Pedido #${order.id} · ${ParfumAPI.money(order.total)}`});
             items = [];
@@ -392,6 +467,9 @@
             render();
             ParfumStore.updateBadges();
             checkoutForm.reset();
+            delete recipientInput.dataset.edited;
+            syncShippingFields();
+            renderPaymentInstructions();
             proofPreview.hidden = true;
             proofPreviewImage.removeAttribute("src");
             proofFileName.textContent = "Seleccionar captura (opcional)";
