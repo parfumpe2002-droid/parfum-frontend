@@ -350,9 +350,13 @@
     }
 
     async function load() {
-        ensureSelections();
-        renderProduct();
-        renderProfile();
+        // Mantener el título y contenido SEO del HTML inicial hasta que el producto real responda.
+        // Evita que Google indexe "Consultando perfume…" si Render tarda en responder.
+        if (Number(product?.id) > 0) {
+            ensureSelections();
+            renderProduct();
+            renderProfile();
+        }
         status.innerHTML = '<span class="spinner"></span> Actualizando información…';
         try {
             let apiProduct;
