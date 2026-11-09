@@ -155,14 +155,27 @@
         if (!product) return;
         const prices = decants().map(item => Number(item.precio || 0)).filter(value => value > 0);
         const hasStock = decants().some(item => Number(item.stock || 0) > 0 && Number(item.precio || 0) > 0);
+        // Nunca publicar un Product incompleto: Google requiere ofertas o reseñas reales.
+        if (!prices.length) {
+            const script = document.getElementById("productStructuredData");
+            if (script) {
+                script.textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    name: document.title,
+                    url: document.querySelector('link[rel="canonical"]')?.href || location.href
+                });
+            }
+            return;
+        }
         const data = {
             "@context": "https://schema.org",
             "@type": "Product",
             name: `Decant ${product.nombre}`,
             brand: {"@type": "Brand", name: product.marca || "Parfum"},
             description: `Compra decants de ${product.nombre} de ${product.marca} en 3, 5, 10, 20 o 30 ml en Parfum Perú.`,
-            image: currentImage(),
-            url: `https://parfum.com.pe/decants/${product.slug}/`
+            image: new URL(currentImage(), document.baseURI).href,
+            url: document.querySelector('link[rel="canonical"]')?.href || `https://parfum.com.pe/decants/${product.slug}/`
         };
         if (prices.length) {
             data.offers = {
