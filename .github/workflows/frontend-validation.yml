@@ -8,6 +8,9 @@ on:
       - "public_html/js/admin.js"
       - "public_html/js/pedidos.js"
       - "public_html/css/app.css"
+      - "public_html/js/detalle.js"
+      - "scripts/upgrade-decant-pages.cjs"
+      - "build-pwa.sh"
       - ".github/workflows/frontend-validation.yml"
   pull_request:
     branches: ["master"]
@@ -24,3 +27,28 @@ jobs:
         run: find public_html/js -name '*.js' -print0 | xargs -0 -n1 node --check
       - name: Test session handling and remember-me
         run: node --test tests/*.test.cjs
+      - name: Validate generated decant SEO metadata
+        run: |
+          bash build-pwa.sh
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          let verified = 0;
+          for (const dir of fs.readdirSync('public_html/decants', {withFileTypes:true})) {
+            if (!dir.isDirectory()) continue;
+            const file = path.join('public_html/decants', dir.name, 'index.html');
+            if (!fs.existsSync(file)) continue;
+            const html = fs.readFileSync(file, 'utf8');
+            const match = html.match(/<script\s+id="productStructuredData"\s+type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+            if (!match) throw new Error('No structured data for ' + dir.name);
+            const data = JSON.parse(match[1]);
+            if (data['@type'] === 'Product' && !data.offers && !data.review && !data.aggregateRating)
+              throw new Error('Incomplete Product schema in ' + dir.name);
+            if (!html.includes('class="seo-product-intro"'))
+              throw new Error('No initial SEO text in ' + dir.name);
+            verified++;
+          }
+          if (verified < 70) throw new Error('Too few perfume pages: ' + verified);
+          console.log('Verified SEO pages:', verified);
+          NODE
+
