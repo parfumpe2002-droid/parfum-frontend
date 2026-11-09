@@ -59,20 +59,24 @@ for (const folder of fs.readdirSync(root, {withFileTypes:true})) {
   // detalle.js lo sustituirá por Product + ofertas reales cuando cargue la API.
   const initialProduct = /<script\s+id="productStructuredData"\s+type="application\/ld\+json">([\s\S]*?)<\/script>/i;
   const match = html.match(initialProduct);
+  const fallback = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description,
+    url: canonical
+  };
+  const fallbackScript = '<script id="productStructuredData" type="application/ld+json">' +
+    JSON.stringify(fallback) + '</script>';
   if (match) {
     const data = JSON.parse(match[1]);
     if (data["@type"] === "Product" && !data.offers && !data.review && !data.aggregateRating) {
-      const fallback = {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: title,
-        description,
-        url: canonical
-      };
-      html = html.replace(match[0],
-        '<script id="productStructuredData" type="application/ld+json">' +
-        JSON.stringify(fallback) + '</script>');
+      html = html.replace(match[0], fallbackScript);
     }
+  } else {
+    // Algunas fichas antiguas no tenían JSON-LD; incluyen un WebPage válido,
+    // que detalle.js sustituye por Product cuando obtiene el precio real.
+    html = html.replace('</head>', fallbackScript + '\n</head>');
   }
 
   const expected = site + "/decants/" + folder.name + "/";
