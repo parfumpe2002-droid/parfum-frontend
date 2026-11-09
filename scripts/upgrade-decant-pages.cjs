@@ -40,10 +40,13 @@ for (const folder of fs.readdirSync(root, {withFileTypes:true})) {
   if (!title || !description || !canonical) {
     throw new Error("Metadatos SEO incompletos en: " + folder.name);
   }
-  if (!html.includes('class="seo-product-intro"')) {
-    const target = '<section class="detail-grid" id="detailGrid"></section>';
-    if (!html.includes(target)) {
-      throw new Error("No se encontró la sección de detalle: " + folder.name);
+  if (!html.includes('seo-product-intro')) {
+    const target = /<section\b[^>]*\bid="detailGrid"[^>]*>\s*<\/section>/i;
+    const targetClassFirst = /<section\b[^>]*\bclass="detail-grid"[^>]*\bid="detailGrid"[^>]*>\s*<\/section>/i;
+    const targetIdFirst = /<section\b[^>]*\bid="detailGrid"[^>]*\bclass="detail-grid"[^>]*>\s*<\/section>/i;
+    if (!target.test(html) || (!targetClassFirst.test(html) && !targetIdFirst.test(html))) {
+      const pos = html.indexOf('detailGrid');
+      throw new Error("Sección SEO inesperada en " + folder.name + ": " + JSON.stringify(html.slice(Math.max(0, pos-60), pos+80)));
     }
     html = html.replace(target,
       '<section class="detail-grid" id="detailGrid">' +
