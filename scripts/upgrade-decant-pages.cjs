@@ -51,6 +51,27 @@ for (const folder of fs.readdirSync(root, {withFileTypes:true})) {
       '<p>' + description + '</p></div></section>');
   }
 
+  // El HTML inicial debe ser válido aun si Render no responde durante el rastreo.
+  // Un Product sin precio, review ni aggregateRating produce un error crítico.
+  // detalle.js lo sustituirá por Product + ofertas reales cuando cargue la API.
+  const initialProduct = /<script\s+id="productStructuredData"\s+type="application\/ld\+json">([\s\S]*?)<\/script>/i;
+  const match = html.match(initialProduct);
+  if (match) {
+    const data = JSON.parse(match[1]);
+    if (data["@type"] === "Product" && !data.offers && !data.review && !data.aggregateRating) {
+      const fallback = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: title,
+        description,
+        url: canonical
+      };
+      html = html.replace(match[0],
+        '<script id="productStructuredData" type="application/ld+json">' +
+        JSON.stringify(fallback) + '</script>');
+    }
+  }
+
   const expected = site + "/decants/" + folder.name + "/";
   // Las páginas antiguas con canonical hacia otro slug no se anuncian a Google.
   if (canonical === expected) canonicalUrls.add(expected);
