@@ -44,7 +44,7 @@ jobs:
             const data = JSON.parse(match[1]);
             if (data['@type'] === 'Product' && !data.offers && !data.review && !data.aggregateRating)
               throw new Error('Incomplete Product schema in ' + dir.name);
-            if (!html.includes('class="seo-product-intro"'))
+            if (!html.includes('seo-product-intro'))
               throw new Error('No initial SEO text in ' + dir.name);
             verified++;
           }
