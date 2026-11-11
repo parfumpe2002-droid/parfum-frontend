@@ -48,6 +48,9 @@ jobs:
               "privacidad.html":"contactar con nuestro equipo mediante",
               "libro-reclamaciones.html":"WhatsApp de atención",
               "css/app.css":".reviews-list.expanded{max-height:",
+              "decants/asad/":'id="reviewsMore"',
+              "decants/althair/":'id="reviewsMore"',
+              "decants/khamrah/":'id="reviewsMore"',
               "decants/hawas-ice/":'id="reviewsMore"',
               "decants/dior-homme-intense/":'id="reviewsMore"',
               "decants/erba-pura/":'id="reviewsMore"',
@@ -68,7 +71,7 @@ jobs:
                               assert "+51 963 257 194" not in page,"phone still printed in public copy"
                           if path=="js/carrito.js":
                               assert "Número Yape</dt>" not in page,"phone is still exposed in checkout"
-                          if path in ("decants/hawas-ice/","decants/erba-pura/"):
+                          if path in ("decants/asad/","decants/althair/","decants/khamrah/","decants/hawas-ice/","decants/erba-pura/"):
                               assert '"@type":"WebPage"' in page,"incomplete initial Product schema remains"
                               assert 'seo-product-intro' in page,"missing HTML fallback for Google"
                               assert '"@type":"Product"' not in page,"initial Product without real offers"
