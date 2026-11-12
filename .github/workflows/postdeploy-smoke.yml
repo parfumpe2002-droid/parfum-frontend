@@ -20,6 +20,7 @@ on:
       - "public_html/js/carrito.js"
       - "public_html/js/detalle.js"
       - "scripts/upgrade-decant-pages.cjs"
+      - "tests/seo-canonical.test.cjs"
       - "public_html/css/app.css"
   workflow_dispatch:
 jobs:
@@ -27,6 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test canonical URL logic before deployment checks
+        run: node tests/seo-canonical.test.cjs
       - name: Confirm live catalog, combos and session management are published
         run: |
           python3 - <<'PY'
