@@ -76,6 +76,18 @@ jobs:
                               assert 'seo-product-intro' in page,"missing HTML fallback for Google"
                               assert '"@type":"Product"' not in page,"initial Product without real offers"
 
+                  # Comprueba el sitemap desde la URL canónica y sin depender de Render.
+                  import xml.etree.ElementTree as ET
+                  sitemap="https://parfum.com.pe/sitemap.xml"
+                  req=urllib.request.Request(sitemap,headers={"User-Agent":"Googlebot","Cache-Control":"no-cache"})
+                  with urllib.request.urlopen(req,timeout=20) as r:
+                      xml=r.read()
+                      assert r.status==200,("sitemap",r.status)
+                      assert r.url==sitemap,("sitemap redirected",r.url)
+                  root=ET.fromstring(xml)
+                  urls=root.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url")
+                  assert len(urls)>=80,("few sitemap URLs",len(urls))
+                  print("PARFUM_OFFICIAL_SITEMAP_HTTP_200",len(urls),flush=True)
                   print("PARFUM_PRODUCT_DETAIL_AND_REVIEWS_DEPLOYED_OK",flush=True)
                   break
               except Exception as exc:
