@@ -151,6 +151,14 @@
             </section>`;
     }
 
+    // Las URLs /decants/<slug>/ ya tienen su canónica correcta en el HTML.
+    // No permitir que datos incompletos de la API la cambien a /undefined/.
+    function canonicalUrlForProduct(productSlug) {
+        const valid = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+        const chosen = valid(pathSlug) ? pathSlug : valid(productSlug) ? productSlug : valid(slug) ? slug : null;
+        return chosen ? `https://parfum.com.pe/decants/${chosen}/` : null;
+    }
+
     function updateStructuredData() {
         if (!product) return;
         const prices = decants().map(item => Number(item.precio || 0)).filter(value => value > 0);
@@ -175,7 +183,7 @@
             brand: {"@type": "Brand", name: product.marca || "Parfum"},
             description: `Compra decants de ${product.nombre} de ${product.marca} en 3, 5, 10, 20 o 30 ml en Parfum Perú.`,
             image: new URL(currentImage(), document.baseURI).href,
-            url: document.querySelector('link[rel="canonical"]')?.href || `https://parfum.com.pe/decants/${product.slug}/`
+            url: document.querySelector('link[rel="canonical"]')?.href || canonicalUrlForProduct(product.slug) || location.href
         };
         if (prices.length) {
             data.offers = {
@@ -212,9 +220,14 @@
         const description = `Compra decants de ${product.nombre} de ${product.marca} en 3, 5, 10, 20 o 30 ml. Consulta también por el frasco completo en Parfum Perú.`;
         const metaDescription = document.querySelector('meta[name="description"]');
         if (metaDescription) metaDescription.setAttribute("content", description);
-        let canonical = document.querySelector('link[rel="canonical"]');
-        if (!canonical) { canonical = document.createElement("link"); canonical.rel = "canonical"; document.head.appendChild(canonical); }
-        canonical.href = `https://parfum.com.pe/decants/${product.slug}/`;
+        // Fichas estáticas: la canónica ya está en el HTML inicial y se conserva.
+        // Solo las rutas dinámicas /detalle.html pueden completar su canónica.
+        const canonicalUrl = canonicalUrlForProduct(product.slug);
+        if (!pathSlug && canonicalUrl) {
+            let canonical = document.querySelector('link[rel="canonical"]');
+            if (!canonical) { canonical = document.createElement("link"); canonical.rel = "canonical"; document.head.appendChild(canonical); }
+            canonical.href = canonicalUrl;
+        }
         updateStructuredData();
         grid.innerHTML = `
             <div class="detail-image-wrap">
