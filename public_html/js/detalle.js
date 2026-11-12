@@ -154,7 +154,8 @@
     // Las URLs /decants/<slug>/ ya tienen su canónica correcta en el HTML.
     // No permitir que datos incompletos de la API la cambien a /undefined/.
     function canonicalUrlForProduct(productSlug) {
-        const valid = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
+        const valid = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value)
+            && value !== "undefined" && value !== "null";
         const chosen = valid(pathSlug) ? pathSlug : valid(productSlug) ? productSlug : valid(slug) ? slug : null;
         return chosen ? `https://parfum.com.pe/decants/${chosen}/` : null;
     }
