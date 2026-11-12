@@ -76,6 +76,29 @@ jobs:
                               assert 'seo-product-intro' in page,"missing HTML fallback for Google"
                               assert '"@type":"Product"' not in page,"initial Product without real offers"
 
+                  # SEO: comprobar que los productos distintos NO se entregan como una misma ficha.
+                  import re
+                  samples={
+                      "erba-pura":"Decant Erba Pura",
+                      "asad-bourbon":"Decant Asad Bourbon",
+                      "stronger-with-you-intensely":"Decant Stronger With You Intensely",
+                      "212-nyc":"Decant 212 NYC",
+                      "le-beau-le-parfum":"Decant Le Beau Le Parfum",
+                  }
+                  for slug, expected_title in samples.items():
+                      path=f"decants/{slug}/"
+                      req=urllib.request.Request("https://parfum.com.pe/"+path,
+                          headers={"User-Agent":"Googlebot","Cache-Control":"no-cache"})
+                      with urllib.request.urlopen(req,timeout=20) as r:
+                          html=r.read().decode("utf-8",errors="replace")
+                          assert r.status==200,("product-status",slug,r.status)
+                      expected_url=f"https://parfum.com.pe/{path}"
+                      canonical=re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"',html)
+                      assert canonical and canonical.group(1)==expected_url,("product-canonical",slug,canonical.group(1) if canonical else None)
+                      assert f"<title>{expected_title} | Parfum Perú</title>" in html,("product-title",slug)
+                      assert "seo-product-intro" in html,("product-seo-intro",slug)
+                      assert '"@type":"Product"' not in html,("incomplete-product-schema",slug)
+                      print("SEO_CANONICAL_SELF_OK",slug,flush=True)
                   # Comprueba el sitemap desde la URL canónica y sin depender de Render.
                   import xml.etree.ElementTree as ET
                   sitemap="https://parfum.com.pe/sitemap.xml"
