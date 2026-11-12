@@ -78,6 +78,9 @@ jobs:
                               assert "+51 963 257 194" not in page,"phone still printed in public copy"
                           if path=="js/carrito.js":
                               assert "Número Yape</dt>" not in page,"phone is still exposed in checkout"
+                          if path=="js/detalle.js":
+                              assert "if (!pathSlug && canonicalUrl)" in page,"old JS still overwrites perfume canonicals"
+                              assert 'value !== "undefined"' in page,"old JS still accepts invalid product slugs"
                           if path in ("decants/asad/","decants/althair/","decants/khamrah/","decants/hawas-ice/","decants/erba-pura/"):
                               assert '"@type":"WebPage"' in page,"incomplete initial Product schema remains"
                               assert 'seo-product-intro' in page,"missing HTML fallback for Google"
